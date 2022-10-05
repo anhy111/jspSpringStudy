@@ -18,7 +18,7 @@ public class ProductRepository {
 	// 상품 목록을 저장하기 위한 List<ProductVO> 객체 타입의 변수
 	private List<ProductVO> listOfProducts = 
 									new ArrayList<ProductVO>();
-	// 기본생성자.
+	// 기본생성자
 	public ProductRepository() {
 		// Smart Phone 상품 추가(1행(ProductVO) 추가)
 		// String productId, String pname, int unitPrice
@@ -28,6 +28,8 @@ public class ProductRepository {
 		phone.setManufacturer("Apple");
 		phone.setUnitsInStock(1000);
 		phone.setCondition("New");
+		// ch07에서 추가
+		phone.setFileName("P1234.png");
 		
 		listOfProducts.add(phone);
 		
@@ -39,6 +41,9 @@ public class ProductRepository {
 		notebook.setUnitsInStock(1000);
 		notebook.setCondition("Refurbished"); // 재생상품
 		
+		// ch07에서 추가
+		notebook.setFileName("P1235.png");
+		
 		listOfProducts.add(notebook);
 		
 		// 3) tablet 상품 추가(1행(ProductVO)추가)
@@ -48,6 +53,9 @@ public class ProductRepository {
 		tablet.setManufacturer("Samsung");
 		tablet.setUnitsInStock(1000);
 		tablet.setCondition("Old");	// 중고상품
+		
+		// ch07에서 추가
+		tablet.setFileName("P1236.png");
 		
 		listOfProducts.add(tablet);
 	}

@@ -20,7 +20,7 @@
 <!-- ======================= 상품 상세 시작 ======================= -->
  <div class="container">
 	<form name="newProduct" action="processAddBook.jsp"
-		class="form-horizontal" method="post">
+		class="form-horizontal" method="post" enctype="multipart/form-data">
 		<div class="form-group row">
 			<label class="col-sm-2">도서코드</label>
 			<div class="col-sm-3">
@@ -86,6 +86,11 @@
 			<label class="col-sm-2">상태</label>
 			<div class="col-sm-3">
 				<input type="text" name="condition" class="form-control">
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-sm-offset-2 col-sm-10">
+				파일 : <input type="file" name="filename">
 			</div>
 		</div>
 		<div class="form-group row">

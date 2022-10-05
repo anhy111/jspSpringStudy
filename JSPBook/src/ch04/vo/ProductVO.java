@@ -21,6 +21,9 @@ public class ProductVO implements Serializable {
 	private int unitsInStock;	// 재고수
 	private String condition;	// 신상품 or 중고품 or 재생품
 	
+	// ch07에서 추가
+	private String fileName;
+	
 	// 기본생성자
 	public ProductVO() {}
 	
@@ -98,12 +101,19 @@ public class ProductVO implements Serializable {
 		return serialVersionUID;
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	@Override
 	public String toString() {
 		return "ProductVO [productId=" + productId + ", pname=" + pname + ", unitPrice=" + unitPrice + ", description="
 				+ description + ", manufacturer=" + manufacturer + ", category=" + category + ", unitsInStock="
-				+ unitsInStock + ", condition=" + condition + "]";
+				+ unitsInStock + ", condition=" + condition + ", fileName=" + fileName + "]";
 	}
-	
 	
 }

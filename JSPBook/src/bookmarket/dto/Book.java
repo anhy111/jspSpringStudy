@@ -13,6 +13,10 @@ public class Book {
 	private String releaseDate; // 출판일(월/년)
 	private String condition; 	// 신규 도서 or 중고 도서 or E-Book
 
+	// ch07 추가
+	private String fileName;
+	
+	
 	public Book() {}
 	
 	public Book(String bookId, String name, Integer unitPrice) {
@@ -107,6 +111,14 @@ public class Book {
 
 	public void setCondition(String condition) {
 		this.condition = condition;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String filename) {
+		this.fileName = filename;
 	}
 	
 	

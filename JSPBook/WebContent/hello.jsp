@@ -5,7 +5,7 @@
 <title>Welcome</title>
 </head>
 <body>
-<%!
+<%
 	//선언문
 %>
 	<h1>Hello JSP!!</h1>

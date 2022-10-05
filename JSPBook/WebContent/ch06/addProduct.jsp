@@ -20,7 +20,7 @@
 <!-- ======================= 상품 상세 시작 ======================= -->
 <div class="container">
 	<form name="newProduct" action="processAddProduct.jsp"
-		class="form-horizontal" method="post">
+		class="form-horizontal" method="post" enctype="multipart/form-data">
 		<div class="form-group row">
 			<label class="col-sm-2">상품 코드</label>
 			<div class="col-sm-3">
@@ -30,7 +30,7 @@
 		<div class="form-group row">
 			<label class="col-sm-2">상품명</label>
 			<div class="col-sm-3">
-				<input type="text" name="productName" class="form-control">
+				<input type="text" name="pname" class="form-control">
 			</div>
 		</div>	
 		<div class="form-group row">
@@ -70,6 +70,14 @@
 				<input type="radio" name="condition" value="New">신규 상품
 				<input type="radio" name="condition" value="Old">중고 상품
 				<input type="radio" name="condition" value="Refurbished">재생 상품
+			</div>
+		</div>
+		<!-- ch07에서 추가됨 -->
+		<div class="form-group row">
+			<label class="col-sm-2">이미지</label>
+			<div class="col-sm-5">
+				<!-- 파일을 입력받을 수 있음 -->
+				<input type="file" name="productImage" class="form-control">
 			</div>
 		</div>
 		<div class="form-group row">

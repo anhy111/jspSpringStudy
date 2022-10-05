@@ -8,14 +8,13 @@ import ch04.vo.ProductVO;
 
 public class BookRepository {
 	private static BookRepository bookRepository = new BookRepository();
-	
 	public static BookRepository getInstance() {
 		return bookRepository;
 	}
 	
 	List<Book> listOfBooks;
 	
-	public BookRepository() {
+	private BookRepository() {
 		listOfBooks = new ArrayList<Book>();
 		Book html = new Book("P2345","HTML5+CSS3",15000);
 		html.setAuthor("황재호");
@@ -26,6 +25,7 @@ public class BookRepository {
 		html.setUnitsInStock(2000);
 		html.setTotalPages(200);
 		html.setReleaseDate("2005년05월");
+		html.setFileName("P2345.jpg");
 		listOfBooks.add(html);
 		
 		
@@ -38,6 +38,7 @@ public class BookRepository {
 		java.setUnitsInStock(2000);
 		java.setTotalPages(200);
 		java.setReleaseDate("2005년05월");
+		java.setFileName("P2346.jpg");
 		listOfBooks.add(java);
 		
 		Book spring = new Book("P2347","스프링 4 입문",27000);
@@ -46,9 +47,10 @@ public class BookRepository {
 		spring.setDescription("스트링은 단순히 사용 방법만 익히는 것보다 아키텍처를 어떻게 이해하고 설계하는지가 더 중요합니다. 예제를 복사해 붙여넣는\r\n" + 
 				"식으로는 실제 개발에서 스프링을 제대로 활용할 수 없습니다.");
 		spring.setPublisher("한빛미디어 ");
-		java.setUnitsInStock(2000);
-		java.setTotalPages(200);
-		java.setReleaseDate("2005년05월");
+		spring.setUnitsInStock(2000);
+		spring.setTotalPages(200);
+		spring.setReleaseDate("2005년05월");
+		spring.setFileName("P2347.jpg");
 		listOfBooks.add(spring);
 	}
 	
