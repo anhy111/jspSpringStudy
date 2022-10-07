@@ -9,6 +9,7 @@
 <link rel="stylesheet" 
 	href="/resources/css/bootstrap.min.css">
 <title>도서 등록</title>
+<script type="text/javascript" src="/resources/js/bookValidation.js"></script>
 </head>
 <body>
 <jsp:include page="menu.jsp"/>
@@ -19,7 +20,7 @@
 </div>
 <!-- ======================= 상품 상세 시작 ======================= -->
  <div class="container">
-	<form name="newProduct" action="processAddBook.jsp"
+	<form name="bookForm" action="processAddBook.jsp"
 		class="form-horizontal" method="post" enctype="multipart/form-data">
 		<div class="form-group row">
 			<label class="col-sm-2">도서코드</label>
@@ -84,8 +85,10 @@
 		</div>
 		<div class="form-group row">
 			<label class="col-sm-2">상태</label>
-			<div class="col-sm-3">
-				<input type="text" name="condition" class="form-control">
+			<div class="col-sm-5">
+				<input type="radio" id="condition1" name="condition" value="New">신규 상품
+				<input type="radio" id="condition2" name="condition" value="Old">중고 상품
+				<input type="radio" id="condition3" name="condition" value="Refurbished">재생 상품
 			</div>
 		</div>
 		<div class="form-group row">
@@ -95,13 +98,15 @@
 		</div>
 		<div class="form-group row">
 			<div class="col-sm-offset-2 col-sm-10">
-				<input type="submit" class="btn btn-primary" value="등록" />
+				<input type="button" class="btn btn-primary" value="등록"
+					onclick="f_check()" />
 			</div>
 		</div>
 		<hr>
 	</form>
 </div>
 <!-- ==================== 상품 상세 끝 ==================== -->
+
 <jsp:include page="footer.jsp"/>
 </body>
 </html>
