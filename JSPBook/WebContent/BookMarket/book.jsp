@@ -1,13 +1,17 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page errorPage="exceptionNoBookId.jsp"%>  
 <%@page import="bookmarket.dto.Book"%>
 <%@page import="bookmarket.dao.BookRepository"%>
-<%@ page contentType="text/html; charset=UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
 <%@page import="java.util.List"%>
 <!DOCTYPE html>
 <%	
 	String id = request.getParameter("id");
 	BookRepository bookRepository = BookRepository.getInstance();
 	Book bookVO = bookRepository.getBookById(id);
+	if(bookVO == null){
+		throw new NullPointerException();
+	}
 %>
 <c:set var="bookVO" value="<%=bookVO%>" scope="page" />
 <html>

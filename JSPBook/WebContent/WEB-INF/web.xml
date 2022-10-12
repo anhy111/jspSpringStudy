@@ -9,4 +9,33 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+<!--   <error-page> -->
+<!--   error-code : 오류 코드 설정 --> 
+<!--   	<error-code>404</error-code> -->
+<!--   location : 오류 코드가 발생 시 오류 페이지의 URL로 요청 --> 
+<!--   	<location>/errorCode_404.jsp</location> -->
+<!--   </error-page> -->
+  
+  <!-- 과제 -->
+  <error-page>
+  	<!-- error-code : 오류 코드 설정 -->
+  	<error-code>404</error-code>
+  	<!-- location : 오류 코드가 발생 시 오류 페이지의 URL로 요청 -->
+  	<location>/BookMarket/exceptionNoPage.jsp</location>
+  </error-page>
+  
+  
+  <!-- 100/0과 같이 잘못된 코드를 실행 시 500오류가 발생하여 
+  		오류 페이지 errorCode_500.jsp를 요청함 -->
+<!--   <error-page> -->
+<!--   	<error-code>500</error-code> -->
+<!--   	<location>/errorCode_500.jsp</location> -->
+<!--   </error-page> -->
+  
+  <error-page>
+  	<exception-type>java.lang.NullPointerException</exception-type>
+  	<location>/errorNullPointer.jsp</location>
+  </error-page>
+  	
 </web-app>
