@@ -11,7 +11,7 @@
 	<jsp:include page="menu.jsp"/>
 	<div class="jumbotron">
 		<div class="container">
-			<h1 class="display-3">해당 상품이 존재하지 않습니다.</h1>
+			<h2 class="alert alert-danger" class="display-3">해당 상품이 존재하지 않습니다.</h2>
 		</div>
 	</div>
 	<div class="container">

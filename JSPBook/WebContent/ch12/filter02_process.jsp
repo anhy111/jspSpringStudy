@@ -3,17 +3,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Exception</title>
+<title>Filter</title>
 </head>
 <body>
 	<%
 		String id = request.getParameter("id");
-		String pw = request.getParameter("pw");
-		
-		if(id.equals("") || pw.equals("")){
-			throw new ServletException("요청 파라미터 값이 없습니다.");
-		}
+		String passwd = request.getParameter("passwd");
 	%>
-	<p>아이디:<%=id%></p>
+	<p>입력된 id 값 : <%=id%></p>
+	<p>입력된 pw 값 : <%=passwd%></p>
 </body>
 </html>

@@ -9,7 +9,7 @@
 	<%
 		try{
 			int a = 1 / 0;			
-		} catch(ArithmeticException e){
+		} catch(Exception e){
 			out.print("<p>오류 발생 : "+e.getMessage()+"</p>");
 		}
 	%>

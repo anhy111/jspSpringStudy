@@ -3,17 +3,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Exception</title>
+<title>Filter</title>
 </head>
 <body>
 	<%
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
 		
-		if(id.equals("") || pw.equals("")){
-			throw new ServletException("요청 파라미터 값이 없습니다.");
+		if(id.equals("admin") && pw.equals("admin1234")){
+			response.sendRedirect("/Exercise/ch12/loginForm_success.jsp");
+		} else{
+			out.write("로그인 실패");
 		}
 	%>
-	<p>아이디:<%=id%></p>
 </body>
 </html>

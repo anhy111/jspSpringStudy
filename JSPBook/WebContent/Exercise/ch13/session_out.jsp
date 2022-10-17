@@ -1,14 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page errorPage="isErrorPage.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
-<title>Exception</title>
+<title>Session</title>
 </head>
 <body>
 	<%
-		request.getParameter("ggg").toString();
+		session.invalidate();
+		response.sendRedirect("session.jsp");
 	%>
 </body>
 </html>

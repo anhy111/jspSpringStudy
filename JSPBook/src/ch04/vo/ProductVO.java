@@ -22,7 +22,10 @@ public class ProductVO implements Serializable {
 	private String condition;	// 신상품 or 중고품 or 재생품
 	
 	// ch07에서 추가
-	private String fileName;
+	private String fileName;	// 이미지 파일명
+	
+	// ch 13에서 추가
+	private int quantity;	// 장바구니에 담은 개수
 	
 	// 기본생성자
 	public ProductVO() {}
@@ -107,6 +110,14 @@ public class ProductVO implements Serializable {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+	
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	@Override
