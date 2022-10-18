@@ -16,6 +16,9 @@ public class Book {
 	// ch07 추가
 	private String fileName;
 	
+	// ch13 추가
+	private int quantity;	// 장바구니에 담은 개수
+	
 	
 	public Book() {}
 	
@@ -119,6 +122,14 @@ public class Book {
 
 	public void setFileName(String filename) {
 		this.fileName = filename;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 	
 	

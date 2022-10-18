@@ -18,13 +18,22 @@
 <head>
 <link rel="stylesheet" 
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-<title>상품 목록</title>
+<title>도서 정보</title>
+<script type="text/javascript">
+	function addToCart() {
+		if(confirm("상품을 장바구니에 추가하시겠습니까?")){
+			document.addForm.submit();
+		} else{
+			document.addForm.reset();
+		}
+	}
+</script>
 </head>
 <body>
-<jsp:include page="../ch06/menu.jsp"/>
+<jsp:include page="menu.jsp"/>
 <div class="jumbotron">
 	<div class="container">
-		<h1 class="display-3">상품목록</h1>
+		<h1 class="display-3">도서 정보</h1>
 	</div>
 </div>
 <!-- ======================= 상품 상세 시작 ======================= -->
@@ -57,15 +66,16 @@
 			</p>
 			
 			<h4>${bookVO.unitPrice}원</h4>
-			<p>
-				<a href="#" class="btn btn-info">도서주문&raquo;</a>
+			<p><form name="addForm" action="addCart.jsp?id=<%=bookVO.getBookId()%>" method="post">
+				<a href="#" class="btn btn-info" onclick="addToCart()">도서주문&raquo;</a>
+				<a href="cart.jsp" class="btn btn-warning">장바구니 &raquo;</a>
 				<a href="books.jsp" class="btn btn-secondary">도서목록&raquo;</a>
-			</p>
+			</form>
 		</div>
 	</div>
 	<hr>
 </div>
 <!-- ==================== 상품 상세 끝 ==================== -->
-<jsp:include page="../ch06/footer.jsp"/>
+<jsp:include page="footer.jsp"/>
 </body>
 </html>

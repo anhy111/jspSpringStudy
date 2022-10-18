@@ -124,7 +124,9 @@ public class ProductVO implements Serializable {
 	public String toString() {
 		return "ProductVO [productId=" + productId + ", pname=" + pname + ", unitPrice=" + unitPrice + ", description="
 				+ description + ", manufacturer=" + manufacturer + ", category=" + category + ", unitsInStock="
-				+ unitsInStock + ", condition=" + condition + ", fileName=" + fileName + "]";
+				+ unitsInStock + ", condition=" + condition + ", fileName=" + fileName + ", quantity=" + quantity + "]";
 	}
+	
+	
 	
 }

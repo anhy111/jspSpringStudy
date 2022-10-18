@@ -1,8 +1,7 @@
-<%@page import="ch04.vo.ProductVO"%>
+<%@page import="bookmarket.dto.Book"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,10 +23,10 @@
 		<div class="row">
 			<table width="100%">
 				<tr>
-					<td align="left"><a href="deleteCart.jsp?cartId=<%=cartId%>"
+					<td align="left"><a href="./deleteCart.jsp?cartId=<%=cartId%>"
 						class="btn btn-danger">삭제하기</a></td>
-					<td align="right"><a href="shippingInfo.jsp?cartId=<%=cartId%>"
-						 class="btn btn-success">주문하기</a></td>
+					<td align="right"><a href="#" class="btn btn-success">
+						주문하기</a></td>
 				</tr>
 			</table>
 		</div>
@@ -41,42 +40,43 @@
 					<th>비고</th>
 				</tr>	
 				<%
-					ArrayList<ProductVO> cartList = (ArrayList<ProductVO>)
-							session.getAttribute("cartlist");
 					int sum = 0;
+					ArrayList<Book> cartList = (ArrayList<Book>)
+							session.getAttribute("cartlist");
 					if(cartList == null || cartList.size() == 0){
 				%>
 					<tr>	
 						<td colspan="5" align="center">장바구니에 상품이 없습니다.</td>
 					</tr>
 				<% 
-					} else{
+					}else{
 					
-						for(ProductVO product : cartList){
-							int total = product.getUnitPrice() * product.getQuantity();
+						for(int i=0; i<cartList.size(); i++){
+							Book bookVO = cartList.get(i);
+							int total = bookVO.getUnitPrice() * bookVO.getQuantity();
 							sum = sum + total;
 				%>
 					<tr>
-						<td><%=product.getProductId()%> - <%=product.getPname()%></td>
-						<td><fmt:formatNumber value="<%=product.getUnitPrice()%>" pattern="#,###" /></td>
-						<td><%=product.getQuantity()%></td>
-						<td><fmt:formatNumber value="<%=total%>" pattern="#,###" /></td>
-						<td><a href="./removeCart.jsp?id=<%=product.getProductId()%>"
+						<td><%=bookVO.getBookId()%> - <%=bookVO.getName()%></td>
+						<td><%=bookVO.getUnitPrice()%></td>
+						<td><%=bookVO.getQuantity()%></td>
+						<td><%=total%></td>
+						<td><a href="removeCart.jsp?id=<%=bookVO.getBookId()%>"
 							class="badge badge-danger">삭제</a></td>
 					</tr>
 				<%
-						} //end for
-					} // end if
+						}
+					}
 				%>
 				<tr>
 					<th></th>
 					<th></th>
 					<th>총액</th>
-					<th><fmt:formatNumber value="<%=sum%>" pattern="#,###" /></th>
+					<th><%=sum%></th>
 					<th></th>
 				</tr>
 			</table>
-			<a href="./products.jsp" class="btn btn-secondary"> &raquo; 쇼핑 계속하기</a>
+			<a href="./books.jsp" class="btn btn-secondary"> &raquo; 쇼핑 계속하기</a>
 		</div>
 		<hr />
 	</div>

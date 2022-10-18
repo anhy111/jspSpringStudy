@@ -76,33 +76,33 @@
   	<url-pattern>/Exercise/ch12/loginForm_process.jsp</url-pattern>
   </filter-mapping>
   
-  <filter>
-  	<filter-name>Filter02_2</filter-name>
-  	<filter-class>ch12.LogFileFilter</filter-class>
-  	<!-- log를 남길 파일명을 초기화 파라미터로 던짐 -->
-  	<init-param>
-  		<param-name>filename</param-name>
-  		<param-value>c:\\logs\\monitor.log</param-value>
-  	</init-param>
-  </filter>
-  <filter-mapping>
-  	<filter-name>Filter02_2</filter-name>
-  	<url-pattern>/ch12/filter02_process.jsp</url-pattern>
-  </filter-mapping>
+<!--   <filter> -->
+<!--   	<filter-name>Filter02_2</filter-name> -->
+<!--   	<filter-class>ch12.LogFileFilter</filter-class> -->
+<!--   	 log를 남길 파일명을 초기화 파라미터로 던짐 --> 
+<!--   	<init-param> -->
+<!--   		<param-name>filename</param-name> -->
+<!--   		<param-value>c:\\logs\\monitor.log</param-value> -->
+<!--   	</init-param> -->
+<!--   </filter> -->
+<!--   <filter-mapping> -->
+<!--   	<filter-name>Filter02_2</filter-name> -->
+<!--   	<url-pattern>/ch12/filter02_process.jsp</url-pattern> -->
+<!--   </filter-mapping> -->
   
   <!-- 로그 xml -->
-  <filter>
-  	<filter-name>LogFilter</filter-name>
-  	<filter-class>filter.LogFilter</filter-class>
-  	<init-param>
-  		<param-name>filename</param-name>
-  		<param-value>c:\\logs\\webmarket.log</param-value>
-  	</init-param>
-  </filter>
-  <filter-mapping>
-  	<filter-name>LogFilter</filter-name>
-  	<url-pattern>/*</url-pattern>
-  </filter-mapping>
+<!--   <filter> -->
+<!--   	<filter-name>LogFilter</filter-name> -->
+<!--   	<filter-class>filter.LogFilter</filter-class> -->
+<!--   	<init-param> -->
+<!--   		<param-name>filename</param-name> -->
+<!--   		<param-value>c:\\logs\\webmarket.log</param-value> -->
+<!--   	</init-param> -->
+<!--   </filter> -->
+<!--   <filter-mapping> -->
+<!--   	<filter-name>LogFilter</filter-name> -->
+<!--   	<url-pattern>/*</url-pattern> -->
+<!--   </filter-mapping> -->
   
   
   

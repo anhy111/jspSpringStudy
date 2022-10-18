@@ -62,7 +62,7 @@
 				<b><fmt:message key="unitsInStock"></fmt:message> :</b> ${productVO.unitsInStock}
 			</p>
 			<h4>${productVO.unitsInStock} <fmt:message key="krw"></fmt:message></h4>
-			<p><form name="addForm" action="./addCart.jsp?id=<%=productVO.getProductId()%>" method="post">
+			<p><form name="addForm" action="addCart.jsp?id=<%=productVO.getProductId()%>" method="post">
 					<a href="#" class="btn btn-info" onclick="addToCart()"><fmt:message key="productOrder"></fmt:message>&raquo;</a>
 					<a href="cart.jsp" class="btn btn-warning">장바구니 &raquo;</a>
 					<a href="products.jsp" class="btn btn-secondary"><fmt:message key="productList"></fmt:message>&raquo;</a>
@@ -71,7 +71,7 @@
 	</div>
 </div>
 <!-- ==================== 상품 상세 끝 ==================== -->
-<jsp:include page="../ch06/footer.jsp"/>
+<jsp:include page="footer.jsp"/>
 </fmt:bundle>
 </body>
 </html>
