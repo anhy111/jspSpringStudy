@@ -1,10 +1,8 @@
-<%@page import="java.math.BigDecimal"%>
-<%@ page contentType="text/html; charset=UTF-8"%>
-<%@page import="ch04.vo.ProductVO"%>
+<%@page import="bookmarket.dto.Book"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.net.URLDecoder"%>
+<%@ page contentType="text/html; charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
 	request.setCharacterEncoding("UTF-8");
 
@@ -79,14 +77,14 @@
 		<div>
 			<table class="table table-hover">
 				<tr>
-					<th class="text-center">상품</th>
+					<th class="text-center">도서</th>
 					<th class="text-center">#</th>
 					<th class="text-center">가격</th>
 					<th class="text-center">소계</th>
 				</tr>
 				<%
 					int sum = 0;
-					ArrayList<ProductVO> cartList = (ArrayList<ProductVO>)session
+					ArrayList<Book> cartList = (ArrayList<Book>)session
 							.getAttribute("cartlist");
 					if(cartList == null && cartList.size() == 0){
 				%>
@@ -95,28 +93,25 @@
 					</tr>
 				<%
 					} else{
-						for(ProductVO product : cartList){
-							int total = product.getUnitPrice() * product.getQuantity();
+						for(Book book : cartList){
+							int total = book.getUnitPrice() * book.getQuantity();
 							sum = sum + total;
 				%>
 					<tr>
-						<td class="text-center"><em><%=product.getPname()%></em></td>
-						<td class="text-center"><%=product.getQuantity()%></td>
-						<td class="text-center"><%=product.getUnitPrice() %></td>
+						<td class="text-center"><em><%=book.getName()%></em></td>
+						<td class="text-center"><%=book.getQuantity()%></td>
+						<td class="text-center"><%=book.getUnitPrice() %></td>
 						<td class="text-center"><%=total%></td>
 					</tr>
 				<%
 						}
 					}
-					BigDecimal bum = new BigDecimal(sum);
 				%>
 				<tr>
 					<td> </td>
 					<td> </td>
 					<td class="text-right"><strong>총액:</strong></td>
-					<td class="text-center text-danger"><strong>
-					<fmt:formatNumber value="<%=bum%>" pattern="#,###"></fmt:formatNumber>
-					</strong></td>
+					<td class="text-center text-danger"><strong><%=sum%></strong></td>
 				</tr>
 			</table>
 			<a href="ShippingInfo.jsp?cartId=<%=Shipping_cartId%>"
