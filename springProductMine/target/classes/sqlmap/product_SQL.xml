@@ -88,3 +88,10 @@
 			product_id = #{productId}
 	</delete>
 </mapper>
+
+
+
+
+
+
+

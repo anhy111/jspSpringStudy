@@ -11,12 +11,9 @@ import kr.or.ddit.vo.ProductVO;
 
 @Service
 public class ProductServiceImpl implements ProductService{
-	//의존성 주입(DI)
-	//제어의 역전(IoC)
 	@Autowired
 	ProductDao productDao;
 	
-	//PRODUCT 테이블에 insert
 	@Override
 	public int insertProduct(ProductVO productVO) {	
 		return this.productDao.insertProduct(productVO);
@@ -41,3 +38,5 @@ public class ProductServiceImpl implements ProductService{
 		return this.productDao.delete(productVO);
 	}
 }
+
+
