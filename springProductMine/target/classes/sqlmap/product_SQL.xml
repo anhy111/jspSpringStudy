@@ -32,7 +32,7 @@
 		    description,
 		    manufacturer,
 		    category,
-		    units_in_stock,
+		    units_in_stock unit_in_stock,
 		    condition,
 		    filename,
 		    quantity
@@ -57,7 +57,7 @@
 		    description,
 		    manufacturer,
 		    category,
-		    units_in_stock,
+		    units_in_stock unit_in_stock,
 		    condition,
 		    filename,
 		    quantity

@@ -21,6 +21,13 @@ public class ProductController {
 	@Autowired
 	ProductService productService;
 	
+	@RequestMapping(value = "/addProduct", method = RequestMethod.GET)
+	public ModelAndView addProduct(ModelAndView mav) {
+		mav.setViewName("product/addProduct");
+		
+		return mav;
+	}
+	
 	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
 	public ModelAndView addProductPost(ModelAndView mav, @ModelAttribute ProductVO productVO) {
 		int result = this.productService.insertProduct(productVO);
