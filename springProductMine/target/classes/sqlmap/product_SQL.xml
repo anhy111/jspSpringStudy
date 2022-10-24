@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="product">
+	<!-- PRODUCT 테이블에 insert -->
+	<insert id="insert" parameterType="productVO">
+		INSERT INTO PRODUCT(
+			  PRODUCT_ID
+			, PNAME
+			, UNIT_PRICE
+			, DESCRIPTION
+			, MANUFACTURER
+			, CATEGORY
+			, UNITS_IN_STOCK
+			, CONDITION) 
+		VALUES(
+			#{productId}
+			, #{pname}
+			, #{unitPrice}
+			, #{description}
+			, #{manufacturer}
+			, #{category}
+			, #{unitInStock}
+			, #{condition}
+			)
+	</insert>
+	
+	<select id="list" resultType="productVO" parameterType="String">
+		SELECT
+		    product_id,
+		    pname,
+		    unit_price,
+		    description,
+		    manufacturer,
+		    category,
+		    units_in_stock,
+		    condition,
+		    filename,
+		    quantity
+		FROM
+		    product
+		WHERE 1 = 1
+		<if test="keyWord != null and keyWord != ''">
+			AND pname LIKE '%' || #{keyword} || '%'
+			OR description LIKE '%' || #{keyword} || '%'
+			OR manufacturer LIKE '%' || #{keyword} || '%'
+			OR CATEGORY LIKE '%' || #{keyword} || '%'
+		</if>
+		ORDER BY
+		    product_id DESC
+	</select>
+	
+	<select id="select_detail" parameterType="productVO" resultType="productVO">
+		SELECT
+		    product_id,
+		    pname,
+		    unit_price,
+		    description,
+		    manufacturer,
+		    category,
+		    units_in_stock,
+		    condition,
+		    filename,
+		    quantity
+		FROM
+		    product
+		WHERE
+		    product_id = #{productId}
+	</select>
+	
+	<update id="update" parameterType="productVO">
+		update product
+		set pname = #{pname}
+		    ,unit_price = #{unitPrice}
+		    ,description = #{description}
+		    ,manufacturer = #{manufacturer}
+		    ,category = #{category}
+		    ,units_in_stock = #{unitInStock}
+		    ,condition = #{condition}
+		    ,filename = #{filename}
+		    ,quantity = #{quantity}
+		where 
+		    product_id = #{productId}
+	</update>
+	
+	<delete id="delete" parameterType="productVO">
+		delete from product
+		where 
+			product_id = #{productId}
+	</delete>
+</mapper>

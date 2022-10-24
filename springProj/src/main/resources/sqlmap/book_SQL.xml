@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace : xml파일은 여러개일 수 있으므로 
+	이를 구별하기 위한 식별 용도로 사용 -->
+<mapper namespace="book">
+	<!-- 
+		MyBatis에서 제공해주는 데이터 입력을 나타내는 태그
+		1) Dao 객체가 던전 데이터타입(Stringm int, hashMap, VO, List)
+			parameterType만 사용
+		2) Dao 객체의 메소드 쪽으로 리턴할 타입
+			- resultType : String, int, VO, hashMap
+			- resultMap : MyBatis의 resultMap 태그를 사용
+		3) insert, update, delete 태그의 resultType은 생략=>0 또는 반영된 개수
+		
+	 -->
+	<insert id="insert" parameterType="bookVO">
+		<!-- order로 selectKey의 실행 타이밍 선택 propery로 반환값을 담을 수 있음-->
+		<selectKey order="BEFORE" resultType="integer" keyProperty="bookId">
+			SELECT NVL(MAX(BOOK_ID),0)+1 FROM BOOK
+		</selectKey>
+		
+		INSERT INTO BOOK(BOOK_ID, TITLE, CATEGORY, PRICE, INSERT_DATE)
+		VALUES(#{bookId}, #{title},#{category}, #{price}, SYSDATE)
+	</insert>
+	
+	<select id="select_detail" parameterType="bookVO" resultType="bookVO">
+		SELECT BOOK_ID, TITLE, CATEGORY, PRICE, INSERT_DATE
+		FROM BOOK 
+		WHERE BOOK_ID=#{bookId}
+	</select>
+	
+	<!-- 
+		keyword는 선택입력(필수x)
+		%keyword% 로 검색 또는 %%로 모두검색
+	 -->
+	<select id="list" resultType="bookVO" parameterType="String">
+<!-- 		SELECT BOOK_ID, TITLE, CATEGORY, PRICE, INSERT_DATE -->
+<!-- 		FROM BOOK -->
+<!-- 		WHERE TITLE LIKE '%' || #{keyword} || '%' -->
+<!-- 		OR CATEGORY LIKE '%' || #{keyword} || '%' -->
+<!-- 		order by INSERT_DATE -->
+		
+		<!-- if문 방법 -->
+		SELECT BOOK_ID, TITLE, CATEGORY, PRICE, INSERT_DATE
+		FROM BOOK
+		WHERE 1 = 1
+		<if test="keyWord != null and keyWord != ''">
+			AND TITLE LIKE '%' || #{keyword} || '%'
+			OR CATEGORY LIKE '%' || #{keyword} || '%'
+		</if>
+		order by INSERT_DATE
+	</select>
+	
+	<update id="update" parameterType="bookVO">
+		UPDATE book
+		    SET
+		        title = #{title},
+		        category = #{category},
+		        price = #{price},
+		        insert_date = SYSDATE
+		WHERE
+		    book_id = ${bookId}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from book
+		where book_id = #{bookId}		
+	</delete>
+</mapper>

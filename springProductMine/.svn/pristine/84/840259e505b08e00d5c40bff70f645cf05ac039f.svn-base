@@ -1,0 +1,22 @@
+package kr.or.ddit.dao;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import kr.or.ddit.vo.ProductVO;
+
+@Repository
+public class ProductDao {
+	//의존성 주입(Dependency Injection-DI)
+	//제어의 역전(Inversion of Control - IoC)
+	@Autowired
+	SqlSessionTemplate sqlSessionTemplate;
+	
+	//PRODUCT 테이블에 insert
+	public int insertProduct(ProductVO productVO) {
+		//.insert("namespace.id",파라미터)
+		return sqlSessionTemplate.insert("product.insert", productVO);
+	}
+	
+}

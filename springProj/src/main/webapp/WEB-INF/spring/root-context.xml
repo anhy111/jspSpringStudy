@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- root-context.xml : 스프링 설정 
+		
+		스프링 설정?
+		view와 관련되지 않은 객체를 정의
+		Service(기능), DAO(Repository : 저장소), DB등 비즈니스 로직과 관련된 설정
+		
+	-->
+	<!-- dataSource : 데이터베이스와 관련된 정보를 설정 -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close">
+		<!-- 멤버변수 세팅 -->
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="jspexam" />
+		<property name="password" value="java" />
+	</bean>
+	<!-- 데이터 베이스와 연결을 맺고 끊어질 때까지의
+			라이프 사이클을 관리해주는 sqlSession 객체를 생성 
+			1) dataSource
+			2) mapper xml의 위치 지정
+	-->
+	<bean id="sqlSessionFactory" 
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations"
+			value="classpath:/sqlmap/**/*_SQL.xml" />
+		<property name="configLocation"
+			value="/WEB-INF/mybatisAlias/mybatisAlias.xml" />
+	</bean>
+	
+	<!-- 데이터베이스에 개별적으로 쿼리를 실행시키는 객체
+		이 객체를 통해 query를 설정함
+	 -->
+	<bean id="sqlSessionTemplate"
+	 	 class="org.mybatis.spring.SqlSessionTemplate"> 
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+</beans>
