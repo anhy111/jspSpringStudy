@@ -11,7 +11,8 @@
 			, MANUFACTURER
 			, CATEGORY
 			, UNITS_IN_STOCK
-			, CONDITION) 
+			, CONDITION
+		)
 		VALUES(
 			#{productId}
 			, #{pname}

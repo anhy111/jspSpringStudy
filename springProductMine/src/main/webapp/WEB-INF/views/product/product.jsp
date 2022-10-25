@@ -49,7 +49,7 @@
 <!-- 				method="post"> -->
 				<form name="addForm" method="post">
 					<a href="/update?productId=${data.productId}" class="btn btn-info">상품 수정&raquo;</a>
-					<a href="/delete?productId=${data.productId}" class="btn btn-warning">상품 삭제&raquo;</a>
+					<a href="/delete?productId=${data.productId}" class="btn btn-danger">상품 삭제&raquo;</a>
 <!-- 					<a href="#" class="btn btn-info">상품 주문&raquo;</a> -->
 <!-- 					<a href="cart.jsp" class="btn btn-warning">장바구니&raquo;</a> -->
 					<a href="/products" class="btn btn-secondary">상품 목록&raquo;</a>

@@ -79,7 +79,7 @@ public class ProductController {
 	public ModelAndView updatePost(@ModelAttribute ProductVO productVO, ModelAndView mav) {
 		
 		int result = this.productService.update(productVO);
-		
+		log.info("Condition:" + productVO.getCondition());
 		if(result > 0) {
 			mav.setViewName("redirect:/detail?productId="+productVO.getProductId());
 		} else {

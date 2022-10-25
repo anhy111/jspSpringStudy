@@ -8,16 +8,6 @@
 <title>상품 수정</title>
 <script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 <script type="text/javascript" src="/resources/js/validation.js"></script>
-<script type="text/javascript">
-	$(function() {
-		let condition = "${data.condition}";
-		$("input[type=radio]").val(function(p_inx,p_val) {
-			if(p_val == condition){
-				this.checked = true;
-			}
-		});
-	});
-</script>
 </head>
 <body>
 <!-- 머리글에 해당하는 menu.jsp파일의 내용을 포함하도록 include 액션태그 작성 -->
@@ -75,9 +65,12 @@
 			<div class="form-group row">
 				<label class="col-sm-2">상태</label>
 				<div class="col-sm-5">
-					<input type="radio" id="condition1" name="condition" value="New"/>신규상품
-					<input type="radio" id="condition2" name="condition" value="Old"/>중고상품
-					<input type="radio" id="condition3" name="condition" value="Refurbished"/>재생상품				
+					<input type="radio" id="condition1" name="condition" value="New" <c:if test="${data.condition=='New'}">checked</c:if> 
+					/><label for="condition1">신규상품</label> 
+					<input type="radio" id="condition2" name="condition" value="Old" <c:if test="${data.condition=='Old'}">checked</c:if> 
+					/><label for="condition2">중고상품</label>
+					<input type="radio" id="condition3" name="condition" value="Refurbished" <c:if test="${data.condition=='Refurbished'}">checked</c:if> 
+					/><label for="condition3">재생상품</label>
 				</div>
 			</div>
 			<!-- ch07에서 추가됨 -->
