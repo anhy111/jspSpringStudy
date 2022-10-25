@@ -26,7 +26,7 @@ public class ProductVO implements Serializable{
 	
 
 	// ch13에서 추가함
-	private int quantity; // 장바구니에 상품을 담은 개수
+	private int quantity = 0; // 장바구니에 상품을 담은 개수
 	
 
 	// 기본생성자

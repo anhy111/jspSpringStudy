@@ -1,17 +1,21 @@
 package kr.or.ddit.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.or.ddit.service.ProductService;
-import kr.or.ddit.vo.ProductVO;
 import kr.or.ddit.vo.ProductVO;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -104,5 +108,71 @@ public class ProductController {
 		return mav;
 	}
 	
+	@RequestMapping(value = "/cart",method = RequestMethod.GET)
+	public String cartList(ModelAndView mav) {
+		
+		return "product/cart";
+	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/addCart/{productId}",method = RequestMethod.GET)
+	public String addCart(HttpSession session, @PathVariable("productId") String productId){
+		
+		List<ProductVO> cartList = (List<ProductVO>)session.getAttribute("cartlist");
+		
+		ProductVO productVO = new ProductVO();
+		productVO.setProductId(productId);
+		
+		productVO = productService.selectDetail(productVO);
+		if(cartList == null) {
+			cartList = new ArrayList<ProductVO>();
+		}
+		
+		boolean exist = false;
+		for(ProductVO pv : cartList) {
+			if(pv.getProductId().equals(productId)) {
+				int quantity = pv.getQuantity();
+				
+				pv.setQuantity(++quantity);
+				exist = true;
+				break;
+			}
+		}
+		
+		if(!exist) {
+			int quantity = productVO.getQuantity();
+			productVO.setQuantity(++quantity);
+			cartList.add(productVO);
+		}
+		
+		session.setAttribute("cartlist", cartList);
+		
+		return "complite";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/removeCart/{productId}",method = RequestMethod.GET)
+	public String removeCart(HttpSession session, @PathVariable("productId") String productId){
+		
+		List<ProductVO> cartList = (List<ProductVO>)session.getAttribute("cartlist");
+		
+		for(ProductVO pv : cartList) {
+			if(pv.getProductId().equals(productId)) {
+				cartList.remove(pv);
+			}
+		}
+		
+		return "complite";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/deleteCart",method = RequestMethod.GET)
+	public String deleteCart(HttpSession session){
+		
+		
+		session.removeAttribute("cartlist");
+		
+		
+		return "complite";
+	}
 }
