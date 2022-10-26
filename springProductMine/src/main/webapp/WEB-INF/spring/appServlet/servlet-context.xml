@@ -43,6 +43,11 @@
 	
 	<context:component-scan base-package="kr.or.ddit" />
 	
+	<!-- 첨부 파일을 처리하는 빈 설정 -->
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+		
+	</beans:bean>
 	
 	
 </beans:beans>

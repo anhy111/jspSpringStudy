@@ -75,7 +75,6 @@ public class BoardController {
 		// Model 인터페이스 => 데이터 담당
 		model.addAttribute("name","개똥이");
 		
-		// forwading 경로 담당
 		return "board/formHome";
 	}
 	

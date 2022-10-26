@@ -3,6 +3,7 @@ package kr.or.ddit.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import kr.or.ddit.service.ProductService;
 import kr.or.ddit.vo.ProductVO;
+import kr.or.ddit.vo.ShippingVO;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
@@ -114,40 +116,52 @@ public class ProductController {
 		return "product/cart";
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/addCart/{productId}",method = RequestMethod.GET)
-	public String addCart(HttpSession session, @PathVariable("productId") String productId){
+
+	@RequestMapping(value = "/addCart",method = RequestMethod.POST)
+	public String addCart(@RequestParam String productId,
+					ModelAndView model, @ModelAttribute ProductVO productVO,
+					HttpServletRequest request) {
 		
-		List<ProductVO> cartList = (List<ProductVO>)session.getAttribute("cartlist");
-		
-		ProductVO productVO = new ProductVO();
-		productVO.setProductId(productId);
-		
-		productVO = productService.selectDetail(productVO);
-		if(cartList == null) {
-			cartList = new ArrayList<ProductVO>();
+		if(productId == null) {
+			return "redirect:/detail?productId="+productId;
 		}
 		
-		boolean exist = false;
-		for(ProductVO pv : cartList) {
+		ProductVO vo = this.productService.selectDetail(productVO);
+		
+		if(vo == null) {
+			return "redirect:/exceptionNoProductId";
+		}
+		
+		HttpSession session = request.getSession();
+		
+		List<ProductVO> list = (List<ProductVO>)session.getAttribute("cartlist");
+		
+		if(list==null) {
+			list = new ArrayList<>();
+			
+			session.setAttribute("cartlist", list);
+		}
+		
+		int cnt = 0;	// 장바구니에 상품이 담긴 개수
+		
+		for(int i=0; i<list.size(); i++) {
+			ProductVO pv = list.get(i);
 			if(pv.getProductId().equals(productId)) {
-				int quantity = pv.getQuantity();
-				
-				pv.setQuantity(++quantity);
-				exist = true;
-				break;
+				cnt++;
+				pv.setQuantity(pv.getQuantity()+1);
 			}
 		}
 		
-		if(!exist) {
-			int quantity = productVO.getQuantity();
-			productVO.setQuantity(++quantity);
-			cartList.add(productVO);
+		if(cnt == 0) {
+			vo.setQuantity(1);
+			list.add(vo);
 		}
 		
-		session.setAttribute("cartlist", cartList);
+		for(ProductVO pv : list) {
+			log.info("pv : " + pv.toString());
+		}
 		
-		return "complite";
+		return "redirect:/detail?productId="+productId;
 	}
 	
 	@ResponseBody
@@ -156,9 +170,10 @@ public class ProductController {
 		
 		List<ProductVO> cartList = (List<ProductVO>)session.getAttribute("cartlist");
 		
-		for(ProductVO pv : cartList) {
+		for(int i=0; i<cartList.size(); i++) {
+			ProductVO pv = cartList.get(i);
 			if(pv.getProductId().equals(productId)) {
-				cartList.remove(pv);
+				cartList.remove(i);
 			}
 		}
 		
@@ -175,4 +190,39 @@ public class ProductController {
 		
 		return "complite";
 	}
+	
+	@RequestMapping(value = "/shippingInfo",method = RequestMethod.GET)
+	public String shippingInfo(HttpSession session) {
+		
+		return "product/shippingInfo";
+	}
+	
+	@RequestMapping(value = "/shippingInfo",method = RequestMethod.POST)
+	public String shippingInfoPost(ShippingVO shippingVO, HttpSession session) {
+		
+		if(shippingVO.isNullOrEmpty()) {
+			return "redirect:/shippingInfo";
+		}
+		
+		session.setAttribute("Shipping", shippingVO);
+		
+		return "redirect:/orderConfirmation";
+	}
+	
+	@RequestMapping(value = "/orderConfirmation",method = RequestMethod.GET)
+	public String orderConfirmation() {
+		return "product/orderConfirmation";
+	}
+	
+	@RequestMapping(value = "/thankCustomer",method = RequestMethod.GET)
+	public String thankCustomer() {
+		return "product/thankCustomer";
+	}
+	
+	@RequestMapping(value = "/checkOutCancelled",method = RequestMethod.GET)
+	public String checkOutCancelled() {
+		return "product/checkOutCancelled";
+	}
+	
+	
 }

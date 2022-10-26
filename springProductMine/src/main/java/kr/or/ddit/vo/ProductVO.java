@@ -2,6 +2,8 @@ package kr.or.ddit.vo;
 
 import java.io.Serializable;
 
+import org.springframework.web.servlet.view.AbstractView;
+
 // ProductVO : PRODUCT 테이블의 1행을 담는다.
 // VO : Value Object
 // 자바빈 클래스 (멤버변수, 기본생성자, getter/setter 메소드) 
@@ -26,7 +28,7 @@ public class ProductVO implements Serializable{
 	
 
 	// ch13에서 추가함
-	private int quantity = 0; // 장바구니에 상품을 담은 개수
+	private int quantity = 1; // 장바구니에 상품을 담은 개수
 	
 
 	// 기본생성자

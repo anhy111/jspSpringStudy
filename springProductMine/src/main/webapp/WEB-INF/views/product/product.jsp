@@ -16,15 +16,15 @@
 	}
 	
 	$(function(){
-		$("#addCart").on("click",function(){
-			let productId = "${data.productId}";
+// 		$("#addCart").on("click",function(){
+// 			let productId = "${data.productId}";
 			
-			// get방식으로 /board/7로 요청
-			// json데이터로 비동기 응답
-			$.get("/addCart/"+productId,function(data){
-				console.log("data : ",data);
-			});
-		}); // end btnAccept click
+// 			// get방식으로 /board/7로 요청
+// 			// json데이터로 비동기 응답
+// 			$.get("/addCart/"+productId,function(data){
+// 				console.log("data : ",data);
+// 			});
+// 		}); // end btnAccept click
 	});
 </script>
 </head>
@@ -58,10 +58,10 @@
 				<p><b>재고 수 : </b>${data.unitInStock}</p>
 				<h4>${data.unitPrice}</h4>
 				<p>
-<%-- 				<form name="addForm" action="addCart.jsp?id=${data.productId}" --%>
-<!-- 				method="post"> -->
-				<form name="addForm" method="post">
-					<input type="button" class="btn btn-info" id="addCart" value="상품 주문&raquo;" />
+				<form name="addForm" action="/addCart?productId=${data.productId}"
+				method="post">
+<!-- 					<input type="button" class="btn btn-info" id="addCart" value="상품 주문&raquo;" /> -->
+					<input type="submit" class="btn btn-info" id="addCart" value="상품 주문&raquo;" />
 					<a href="/cart" class="btn btn-warning">장바구니&raquo;</a><br><br>
 					<a href="/update?productId=${data.productId}" class="btn btn-info">상품 수정&raquo;</a>
 					<a href="/delete?productId=${data.productId}" class="btn btn-danger">상품 삭제&raquo;</a><br><br>
