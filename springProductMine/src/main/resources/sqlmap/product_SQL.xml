@@ -10,7 +10,7 @@
 			, DESCRIPTION
 			, MANUFACTURER
 			, CATEGORY
-			, UNITS_IN_STOCK
+			, UNIT_IN_STOCK
 			, CONDITION
 		)
 		VALUES(
@@ -33,7 +33,7 @@
 		    description,
 		    manufacturer,
 		    category,
-		    units_in_stock unit_in_stock,
+		    unit_in_stock,
 		    condition,
 		    filename,
 		    quantity
@@ -58,7 +58,7 @@
 		    description,
 		    manufacturer,
 		    category,
-		    units_in_stock unit_in_stock,
+		    unit_in_stock,
 		    condition,
 		    filename,
 		    quantity
@@ -75,7 +75,7 @@
 		    ,description = #{description}
 		    ,manufacturer = #{manufacturer}
 		    ,category = #{category}
-		    ,units_in_stock = #{unitInStock}
+		    ,unit_in_stock = #{unitInStock}
 		    ,condition = #{condition}
 		    ,filename = #{filename}
 		    ,quantity = #{quantity}
@@ -88,6 +88,14 @@
 		where 
 			product_id = #{productId}
 	</delete>
+	
+	<!-- cart 테이블 insert -->
+	<insert id="insertCart" parameterType="cartVO">
+		insert into cart(CART_ID, NAME, SHIPPING, COUNTRY, ZIP_CODE,
+						ADDRESS_NAME, ADDRESS_DETAIL, REGIST_DT)
+    	values(#{cartId},#{name},#{shippingDate},#{country},#{zipCode},
+    			#{addressName},#{addressDetail},sysdate)
+	</insert>
 </mapper>
 
 

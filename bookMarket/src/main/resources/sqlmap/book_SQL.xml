@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="book">
+	<!-- PRODUCT 테이블에 insert -->
+	<insert id="insert" parameterType="bookVO">
+		INSERT INTO bookmarket (
+		    book_id,
+		    name,
+		    author,
+		    unit_price,
+		    description,
+		    unit_in_stock,
+		    publisher,
+		    total_pages,
+		    release_date,
+		    condition,
+		    filename,
+		    category
+		) VALUES (
+		    #{bookId},
+		    #{name},
+		    #{author},
+		    #{unitPrice},
+		    #{description},
+		    #{unitInStock},
+		    #{publisher},
+		    #{totalPages},
+		    #{releaseDate},
+		    #{condition},
+		    #{filename},
+		    #{category}
+		)
+	</insert>
+	
+	<select id="list" resultType="bookVO">
+		select     
+		    book_id,
+		    name,
+		    author,
+		    unit_price,
+		    description,
+		    unit_in_stock,
+		    publisher,
+		    total_pages,
+		    release_date,
+		    condition,
+		    filename,
+		    category
+		from 
+			bookmarket	
+	</select>
+	
+	<select id="selectOne" resultType="bookVO">
+		select     
+		    book_id,
+		    name,
+		    author,
+		    unit_price,
+		    description,
+		    unit_in_stock,
+		    publisher,
+		    total_pages,
+		    release_date,
+		    condition,
+		    filename,
+		    category
+		from 
+			bookmarket	
+		where
+			book_id = #{bookId}
+	</select>
+	
+	
+</mapper>
+
+
+
+
+
+
+

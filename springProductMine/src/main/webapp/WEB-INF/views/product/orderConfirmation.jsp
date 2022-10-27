@@ -1,25 +1,15 @@
-<%@page import="kr.or.ddit.vo.ShippingVO"%>
 <%@page import="kr.or.ddit.vo.ProductVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page import="java.math.BigDecimal"%>
 <%@page import="java.util.ArrayList"%>
-<%//스크립틀릿
+<%@page import="java.net.URLDecoder"%>
 
-	ShippingVO shippingVO = (ShippingVO)session.getAttribute("Shipping");
-
-	String Shipping_name = shippingVO.getName();
-	String Shipping_zipCode = shippingVO.getZipCode();
-	String Shipping_country = shippingVO.getCountry();
-	String Shipping_addressName = shippingVO.getAddressName();
-	String Shipping_shippingDate = shippingVO.getShippingDate();
-
-%>
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/resources/css/bootstrap.min.css" />
 <title>주문 정보</title>
 </head>
 <body>
@@ -41,13 +31,13 @@
 		<!-- 고객 정보 시작 : cookie사용-->
 		<div class="row justify-content-between">
 			<strong>배송 주소</strong><br />
-			성명 : <%=Shipping_name%><br />
-			우편번호 : <%=Shipping_zipCode%><br />
-			주소 : <%=Shipping_addressName%>&nbsp;<%=Shipping_country%>
+			성명 : ${cartVO.name}<br />
+			우편번호 : ${cartVO.zipCode}<br />
+			주소 : ${cartVO.addressName}&nbsp;${cartVO.addressDetail} &nbsp;${cartVO.country}
 		</div>
 		<div class="col-4" align="right">
 			<p>
-				<em>배송일 : <%=Shipping_shippingDate%></em>
+				<em>배송일 : ${cartVO.shippingDate}</em>
 			</p>
 		</div>
 		<!-- 고객 정보 끝 -->
@@ -100,7 +90,7 @@
 				</tr>
 			</table>
 			
-			<a href="/shippingInfo"
+			<a href="/shippingInfo?cartId=${cartVO.cartId}"
 			class="btn btn-secondary" role="button">이전</a>
 			<a href="/thankCustomer" class="btn btn-success"
 			role="button">주문 완료</a>

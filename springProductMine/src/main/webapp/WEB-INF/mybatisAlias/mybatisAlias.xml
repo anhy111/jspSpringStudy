@@ -15,5 +15,7 @@
 	<!-- 자주 사용하는 타입의 별칭을 세팅 -->
 	<typeAliases>
 		<typeAlias type="kr.or.ddit.vo.ProductVO" alias="productVO"/>
+		<typeAlias type="kr.or.ddit.vo.CartVO" alias="cartVO"/>
+		<typeAlias type="kr.or.ddit.vo.CartDetVO" alias="cartDetVO"/>
 	</typeAliases>
 </configuration>

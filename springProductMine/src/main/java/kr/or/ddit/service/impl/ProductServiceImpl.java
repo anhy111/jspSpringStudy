@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import kr.or.ddit.dao.ProductDao;
 import kr.or.ddit.service.ProductService;
+import kr.or.ddit.vo.CartVO;
 import kr.or.ddit.vo.ProductVO;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService{
 	@Autowired
@@ -36,6 +38,14 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public int delete(ProductVO productVO) {
 		return this.productDao.delete(productVO);
+	}
+	
+	@Override
+	public int thankCustomer(CartVO cartVO) {
+		
+		int cartInCnt = this.productDao.insertCart(cartVO);
+		log.info("cartInCnt : " + cartInCnt);
+		return 0;
 	}
 }
 
