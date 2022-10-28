@@ -1,15 +1,65 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <title>상품 등록</title>
+<style type="text/css">
+	.imgs_wrap{
+		width: 300px;
+		margin-top: 50px;
+	}
+	
+	.imgs_wrap img{
+		max-width: 100%;
+	}
+</style>
 <script type="text/javascript" src="/resources/js/validation.js"></script>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		// 이미지 미리보기
+		let sel_file = [];
+		
+		$("#productImage").on("change",handleImgFileSelect);
+		
+		function handleImgFileSelect(e) {
+			let files = e.target.files;
+			
+			// 이미지가 여러개가 있을 수 있으므로 이미지를 분리하여 배열로 만듦
+			let fileArr = Array.prototype.slice.call(files);
+			
+			fileArr.forEach(function(f){
+				// 유효성 검사
+				if(!f.type.match("image.*")){
+					alert("이미지 확장자만 가능합니다.");
+					return;
+				}
+				
+				sel_file.push(f);
+				
+				let reader = new FileReader();
+				reader.onload = function(e){
+					// e.target : 이미지 객체
+					// e.target.result : reader가 이미지를 다 읽은 결과
+					console.log(e.target);
+					let img_html = "<img src=\"" + e.target.result + "\" />";
+					
+					$(".imgs_wrap").append(img_html);
+				}
+				// f: 이미지 파일 객체를 읽은 후 다음 이미지 파일(f)을 위해 초기화
+				reader.readAsDataURL(f);
+			}); // end forEach
+			
+			
+			
+		}
+	});
+</script>
 </head>
 <body>
-<!-- 머리글에 해당하는 menu.jsp파일의 내용을 포함하도록 include 액션태그 작성 -->
 	<jsp:include page="menu.jsp"/>
 	<div class="jumbotron">
 		<div class="container">
@@ -21,7 +71,8 @@
 		<div class="text-right">
 			<a href="?language=ko">Korea</a> | <a href="?language=en">English</a>
 		</div> 
-		<form name="newProduct" action="/addProduct" class="form-horizontal" method="post">
+		<form name="newProduct" action="/addProduct" class="form-horizontal" method="post"
+				enctype="multipart/form-data">
 			<div class="form-group row">
 				<label class="col-sm-2"><spring:message code="productId"/></label>
 				<div class="col-sm-3">
@@ -76,7 +127,13 @@
 			<div class="form-group row">
 				<label class="col-sm-2"><spring:message code="productImage"/></label>
 				<div class="col-sm-5">
-					<input type="file" id="productImage" name="productImage" class="form-control">
+					<input type="file" id="productImage" name="productImage" class="form-control"
+							multiple />
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="imgs_wrap">
+				
 				</div>
 			</div>
 			<div class="form-group row">

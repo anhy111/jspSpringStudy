@@ -96,6 +96,15 @@
     	values(#{cartId},#{name},#{shippingDate},#{country},#{zipCode},
     			#{addressName},#{addressDetail},sysdate)
 	</insert>
+	
+	<!-- ATTACH 테이블에 insert -->
+	<update id="insertAttach" parameterType="java.util.List">
+		<foreach collection="List" item="attachVO" open="INSERT ALL"
+				close="SELECT * FROM SYS.DAUL" separator=" ">
+			into attach values(#{attachVO.seq},#{attachVO.tid},#{attachVO.attachName}
+				,#{attachVO.attachSize},#{attachVO.attachType},sysdate)	
+		</foreach>
+	</update>
 </mapper>
 
 
