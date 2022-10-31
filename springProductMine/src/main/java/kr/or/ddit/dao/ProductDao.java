@@ -45,4 +45,8 @@ public class ProductDao {
 		return sqlSessionTemplate.update("product.insertAttach", attachVOList);
 	}
 	
+	public String getProductId() {
+		return this.sqlSessionTemplate.selectOne("product.getProductId");
+	}
+	
 }

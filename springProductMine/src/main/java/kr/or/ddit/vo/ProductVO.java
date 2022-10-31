@@ -26,7 +26,7 @@ public class ProductVO implements Serializable{
 	private String condition; // 신상품 or 중고품 or 재생품
 	
 	// ch07에서 추가함
-	private String filename = "none"; // 이미지 파일명
+	private String filename; // 이미지 파일명
 	
 
 	// ch13에서 추가함

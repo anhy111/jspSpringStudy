@@ -5,18 +5,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.interceptor.BeanFactoryCacheOperationSourceAdvisor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.or.ddit.service.MemberService;
 import kr.or.ddit.vo.BookVO;
+import kr.or.ddit.vo.MemVO;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class BoardController {
 	
+	@Autowired
+	MemberService memberService;
 	/*
 	 	요청 경로는 반드시 설정해야 하는 필수 정보
 	 	컨트롤러의 클래스 레벨과 메서드 레벨로 지정할 수 있음
@@ -184,5 +190,17 @@ public class BoardController {
 		bookVOList.add(bookVO);
 		
 		return bookVOList;
+	}
+	
+	@GetMapping("/list")
+	public String list(Model model) {
+		List<MemVO> list = memberService.list();
+		
+		for(MemVO vo : list) {
+			log.info(vo.toString());
+		}
+		
+		model.addAttribute("list",list);
+		return "board/list";
 	}
 }

@@ -173,6 +173,7 @@
 		const startVideo = () => {
 			// getMedia...
 		};
+		
 	}
 </script>
 </body>

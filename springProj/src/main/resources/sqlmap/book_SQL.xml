@@ -67,4 +67,13 @@
 		delete from book
 		where book_id = #{bookId}		
 	</delete>
+	
+	<!-- 첨부파일 저장하기 -->
+	 <update id="insertAttach" parameterType="java.util.List">
+	 	<foreach collection="list" item="attachVO" open="INSERT ALL "
+	 		close="SELECT * FROM SYS.DUAL" separator=" ">
+	 		INTO ATTACH VALUES(#{attachVO.seq},#{attachVO.tid},#{attachVO.attachName}
+	 			,#{attachVO.attachSize},#{attachVO.attachType},sysdate)
+	 	</foreach>
+	 </update>
 </mapper>

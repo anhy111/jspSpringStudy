@@ -3,6 +3,12 @@
 <mapper namespace="product">
 	<!-- PRODUCT 테이블에 insert -->
 	<insert id="insert" parameterType="productVO">
+		<selectKey order="BEFORE" keyProperty="productId" 
+				resultType="String">
+			SELECT SUBSTR(MAX(PRODUCT_ID),0,1)
+			       || TRIM(SUBSTR(MAX(PRODUCT_ID),2)+1)
+			FROM PRODUCT
+		</selectKey>
 		INSERT INTO PRODUCT(
 			  PRODUCT_ID
 			, PNAME
@@ -35,10 +41,12 @@
 		    category,
 		    unit_in_stock,
 		    condition,
-		    filename,
+		    (SELECT A.ATTACH_NAME FROM ATTACH A
+		     WHERE P.PRODUCT_ID = A.TID
+		     AND A.SEQ = 1) FILENAME,
 		    quantity
 		FROM
-		    product
+		    product p
 		WHERE 1 = 1
 		<if test="keyWord != null and keyWord != ''">
 			AND pname LIKE '%' || #{keyword} || '%'
@@ -52,20 +60,22 @@
 	
 	<select id="select_detail" parameterType="productVO" resultType="productVO">
 		SELECT
-		    product_id,
-		    pname,
-		    unit_price,
-		    description,
-		    manufacturer,
-		    category,
-		    unit_in_stock,
-		    condition,
-		    filename,
-		    quantity
+		    P.PRODUCT_ID,
+		    P.PNAME,
+		    P.UNIT_PRICE,
+		    P.DESCRIPTION,
+		    P.MANUFACTURER,
+		    P.CATEGORY,
+		    P.UNIT_IN_STOCK,
+		    P.CONDITION,
+		    P.QUANTITY,
+		    (SELECT A.ATTACH_NAME FROM ATTACH A
+		     WHERE P.PRODUCT_ID = A.TID
+		     AND A.SEQ = 1) FILENAME
 		FROM
-		    product
+		    PRODUCT P
 		WHERE
-		    product_id = #{productId}
+		    P.PRODUCT_ID = #{productId}
 	</select>
 	
 	<update id="update" parameterType="productVO">
@@ -98,13 +108,20 @@
 	</insert>
 	
 	<!-- ATTACH 테이블에 insert -->
-	<update id="insertAttach" parameterType="java.util.List">
-		<foreach collection="List" item="attachVO" open="INSERT ALL"
-				close="SELECT * FROM SYS.DAUL" separator=" ">
-			into attach values(#{attachVO.seq},#{attachVO.tid},#{attachVO.attachName}
-				,#{attachVO.attachSize},#{attachVO.attachType},sysdate)	
-		</foreach>
-	</update>
+	 <update id="insertAttach" parameterType="java.util.List">
+	 	<foreach collection="list" item="attachVO" open="INSERT ALL "
+	 		close="SELECT * FROM SYS.DUAL" separator=" ">
+	 		INTO ATTACH VALUES(#{attachVO.seq},#{attachVO.tid},#{attachVO.attachName}
+	 			,#{attachVO.attachSize},#{attachVO.attachType},sysdate)
+	 	</foreach>
+	 </update>
+	 
+	 <!-- PRODUCT 테이블의 기본키 자동 생성 -->
+	 <select id="getProductId" resultType="String">
+		SELECT SUBSTR(MAX(PRODUCT_ID),0,1)
+		       || TRIM(SUBSTR(MAX(PRODUCT_ID),2)+1)
+		FROM PRODUCT
+	 </select>
 </mapper>
 
 

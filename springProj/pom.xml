@@ -223,7 +223,32 @@
 		</dependency>
 
 		<!-- ////////// 파일을 처리하기 위한 라이브러리 끝 ////////// -->
+		<!-- //////////// 파일 업로드 의존관계 시작 //////////// -->
+		<!-- common-fileupload 라이브러리는 tomcat7.0버전 이후로는
+				서블릿 3.0이상에서 지원 -->
+		<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload/1.4 -->
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.4</version>
+		</dependency>
 		
+		<!-- 썸네일 라이브러리 -->
+		<!-- https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib -->
+		<dependency>
+		    <groupId>org.imgscalr</groupId>
+		    <artifactId>imgscalr-lib</artifactId>
+		    <version>4.2</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/net.coobird/thumbnailator -->
+		<dependency>
+		    <groupId>net.coobird</groupId>
+		    <artifactId>thumbnailator</artifactId>
+		    <version>0.4.8</version>
+		</dependency>
+		
+		<!-- //////////// 파일 업로드 의존관계 끝 //////////// -->
 	</dependencies>
     <build>
         <plugins>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.ddit.dao.BookDao;
 import kr.or.ddit.service.BookService;
+import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.BookVO;
 
 @Service
@@ -39,5 +40,10 @@ public class BookServiceImpl implements BookService{
 	@Override
 	public int delete(int bookId) {
 		return this.bookDao.delete(bookId);
+	}
+	
+	@Override
+	public int insertAttach(List<AttachVO> attachVOList) {
+		return this.bookDao.insertAttach(attachVOList);
 	}
 }

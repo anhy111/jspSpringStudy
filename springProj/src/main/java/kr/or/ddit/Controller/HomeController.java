@@ -262,4 +262,24 @@ public class HomeController {
 		
 		return entity;
 	}
+	
+	
+	/*	컨트롤러 메서드 매개변수
+		1. Model
+			이동 대상에 전달할 데이터를 가지고 있는 인터페이스
+		2. RedirectAttributes
+			Redirect 대상에 전달할 데이터를 가지고 있는 인터페이스
+		3. 자바빈즈 클래스
+			요청 파라미터를 가지고 있는 자바빈즈 클래스
+		4. MultipartFile
+			업로드된 파일 정보를 가지고 있는 인터페이스
+		5. BindingResult
+			도메이 클래스(VO)의 입력값 검증 결과를 가지고 있는 인터페이스
+			스프링폼과 함께 사용됨
+		6. java.util.Locale
+			클라이언트 로케일
+		7. java.security.Principal
+			클라이언트 인증을 위한 사용자 정보를 가지고 있는 인터페이스
+	 */
+	
 }

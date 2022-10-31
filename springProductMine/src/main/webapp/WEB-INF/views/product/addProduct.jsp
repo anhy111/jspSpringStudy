@@ -53,9 +53,15 @@
 				reader.readAsDataURL(f);
 			}); // end forEach
 			
-			
-			
-		}
+		}// end handleImgFileSelect()
+		
+		$.ajax({
+			url: "/getProductId",
+			type:"post",
+			success:function(result){
+				$("#productId").val(result.productId);
+			}
+		});
 	});
 </script>
 </head>
@@ -76,7 +82,7 @@
 			<div class="form-group row">
 				<label class="col-sm-2"><spring:message code="productId"/></label>
 				<div class="col-sm-3">
-					<input type="text" id="productId" name="productId" class="form-control">
+					<input type="text" id="productId" name="productId" class="form-control" readonly>
 				</div>
 			</div>
 			<div class="form-group row">
