@@ -18,14 +18,13 @@
 	}
 </style>
 <script src="/resources/js/face-api.min.js"></script>
-
+ 
 </head>
 <body>
 	<video id="video" width="720" height="560" autoplay="autoplay"></video>
-	
 <script type="text/javascript">
 	const video = document.querySelector("#video");
-	
+	Webcam.attach( '#camera' );
 	Promise.all([
 		faceapi.nets.tinyFaceDetector.loadFromUri('/resources/models'),
 		faceapi.nets.faceLandmark68Net.loadFromUri('/resources/models'),

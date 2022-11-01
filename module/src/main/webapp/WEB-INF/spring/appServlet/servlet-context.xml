@@ -21,6 +21,16 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+	<!-- 첨부파일 설정 -->
+ 	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+	</beans:bean>
+	
+	<beans:bean id="uploadPath" class="java.lang.String">
+		<beans:constructor-arg value="C:\\upload"></beans:constructor-arg>
+	</beans:bean>
+   <!-- 첨부파일 설정 끝 -->
+   
 	<context:component-scan base-package="kr.or.ddit" />
 	
 	
