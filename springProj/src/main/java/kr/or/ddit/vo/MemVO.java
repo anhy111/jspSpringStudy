@@ -1,6 +1,9 @@
 package kr.or.ddit.vo;
 
+import java.util.Arrays;
 import java.util.Date;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class MemVO {
 	private String memId;
@@ -21,6 +24,21 @@ public class MemVO {
 	private String memMemorial;
 	private Date memMemorialday;
 	private int memMileage;
+	private String filename; // 이미지 파일명
+	private MultipartFile[] memImage;
+	
+	public String getFilename() {
+		return filename;
+	}
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+	public MultipartFile[] getMemImage() {
+		return memImage;
+	}
+	public void setMemImage(MultipartFile[] memImage) {
+		this.memImage = memImage;
+	}
 	public String getMemId() {
 		return memId;
 	}
@@ -131,12 +149,14 @@ public class MemVO {
 	}
 	@Override
 	public String toString() {
-		return "{memId=" + memId + ", memPass=" + memPass + ", memName=" + memName + ", memRegno1=" + memRegno1
+		return "MemVO [memId=" + memId + ", memPass=" + memPass + ", memName=" + memName + ", memRegno1=" + memRegno1
 				+ ", memRegno2=" + memRegno2 + ", memBir=" + memBir + ", memZip=" + memZip + ", memAdd1=" + memAdd1
 				+ ", memAdd2=" + memAdd2 + ", memHometel=" + memHometel + ", memComtel=" + memComtel + ", memHp="
 				+ memHp + ", memMail=" + memMail + ", memJob=" + memJob + ", memLike=" + memLike + ", memMemorial="
-				+ memMemorial + ", memMemorialday=" + memMemorialday + ", memMileage=" + memMileage + "}";
+				+ memMemorial + ", memMemorialday=" + memMemorialday + ", memMileage=" + memMileage + ", filename="
+				+ filename + ", memImage=" + Arrays.toString(memImage) + "]";
 	}
+	
 	
 	
 	

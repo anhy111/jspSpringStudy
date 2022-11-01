@@ -1,10 +1,16 @@
 package kr.or.ddit.Controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.inject.Inject;
 import javax.jws.soap.SOAPBinding.Use;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,12 +19,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.or.ddit.service.MemberService;
+import kr.or.ddit.vo.CardVO;
 import kr.or.ddit.vo.MemberVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
 public class MemberController {
+	
+	//DI(의존성 주입)
+	@Inject
+	MemberService memberService;
 	
 	@GetMapping("/register")
 	public String registerByParameter(String userId, String passwd) {
@@ -98,21 +110,6 @@ public class MemberController {
 		return "register/success";
 	}
 	
-	@GetMapping("/register/register05")
-	public String register05ByBeans() {
-		return "register/register05";
-	}
-	
-	// 폼 텍스트 필드 요소의 값을 자바빈즈 매개변수의 정수 타입 매개변수로 처리 됨
-	@PostMapping("/register/register05")
-	public String register05ByBeansPost(@ModelAttribute MemberVO memberVO,
-				int coin) {
-		log.info("memberVO : " + memberVO.toString());
-		log.info("coin : " + coin);
-		
-		return "register/success";
-	}
-	
 	// birth=1234 (x)
 	// birth=2022-10-31 (x)
 	// birth=20221031 (x)
@@ -139,5 +136,29 @@ public class MemberController {
 		return "register/success";
 	}
 	
+	@GetMapping("/register/register05")
+	public String register05ByBeans() {
+		return "register/register05";
+	}
 	
+	// 폼 텍스트 필드 요소의 값을 자바빈즈 매개변수의 정수 타입 매개변수로 처리 됨
+	@PostMapping("/register/register05")
+	public String register05ByBeansPost(@ModelAttribute MemberVO memberVO,
+				int coin, ArrayList<String> cars,
+				Model model) {
+		log.info("처음 memberVO : " + memberVO.toString());
+		
+		String car = StringUtils.join(memberVO.getCars(),",");
+		memberVO.setCar(car);
+		
+		String hobby = StringUtils.join(memberVO.getHobbyList(),",");
+		memberVO.setHobby(hobby);
+		
+		int result = this.memberService.memberInsert(memberVO);
+		model.addAttribute("result", result);
+		
+		log.info("나중 memberVO : " + memberVO.toString());
+		
+		return "register/success";
+	}
 }

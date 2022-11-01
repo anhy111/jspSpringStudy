@@ -52,8 +52,15 @@ http://www.springframework.org/schema/security/spring-security-4.2.xsd">
    <!-- kr.or.ddit 패키지를 컴포넌트 스캔 대상으로 함 -->
    <context:component-scan base-package="kr.or.ddit" />
    
-   
-   
+   <!-- 첨부파일 설정 -->
+ 	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+	</beans:bean>
+	
+	<beans:bean id="uploadPath" class="java.lang.String">
+		<beans:constructor-arg value="C:\\upload"></beans:constructor-arg>
+	</beans:bean>
+   <!-- 첨부파일 설정 끝 -->
    
    
 </beans:beans>

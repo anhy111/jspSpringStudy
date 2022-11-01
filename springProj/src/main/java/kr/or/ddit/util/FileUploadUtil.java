@@ -22,7 +22,7 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Slf4j
 @Controller
 public class FileUploadUtil {
-	private String uploadFolder = "C:\\Users\\PC-18\\git\\jspSpringStudy\\springProductMine\\src\\main\\webapp\\resources\\upload";
+	private String uploadFolder = "C:\\Users\\PC-18\\git\\jspSpringStudy\\springProj\\src\\main\\webapp\\resources\\upload";
 	
 	//DI(의존성 주입)
 	@Autowired

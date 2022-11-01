@@ -4,6 +4,7 @@
 <!-- namespace : xml파일은 여러개일 수 있으므로 
 	이를 구별하기 위한 식별 용도로 사용 -->
 <mapper namespace="member">
+
 	<select id="list" resultType="memVO">
 		SELECT
 		    MEM_ID,
@@ -28,4 +29,48 @@
 		FROM
 			MEMBER
 	</select>
+	
+	<insert id="insertMem" parameterType="memVO">
+		INSERT
+		    INTO member (
+		        mem_id,
+		        mem_pass,
+		        mem_name,
+		        mem_job,
+		        mem_like
+		    )
+		VALUES (
+		       #{memId},
+		       #{memPass},
+		       #{memName},
+		       #{memJob},
+		       #{memLike}
+		)
+	</insert>
+	
+	<!-- member 테이블 insert -->
+	<insert id="memberInsert" parameterType="memberVO">
+		INSERT INTO MEMBER2(USER_ID, PASSWORD, COIN, BIRTH, GENDER, 
+								NATIONALITY, MARRIAGED, CARS, HOBBY_LIST)
+        VALUES(#{userId},#{password},#{coin},#{birth},#{gender}
+        				,#{nationality},#{marriaged},#{car},#{hobby})
+	</insert>
+	
+	<!-- address 테이블 insert -->
+	<insert id="addressInsert" parameterType="memberVO">
+		INSERT INTO ADDRESS(USER_ID, POST_CODE, ADDRESS, ADDRESS_DETAIL)
+            VALUES(#{userId},#{addressVO.postCode},#{addressVO.address},#{addressVO.addressDetail})
+	</insert>
+	
+	<!-- memberVO : cardVOList = 1 : N 
+		CARD 테이블에 insert
+		List<CardVO> cardVOList = memberVO.getCardVOList();
+	-->
+	<update id="insertCard" parameterType="java.util.List">
+		<foreach collection="list" item="cardVO" open="INSERT ALL "
+			close="SELECT * FROM SYS.DUAL" separator=" ">
+			INTO CARD VALUES(#{cardVO.userId}, #{cardVO.no}, #{cardVO.validMonth})
+		</foreach>
+	</update>
+	
 </mapper>

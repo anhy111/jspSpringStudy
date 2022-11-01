@@ -1,5 +1,6 @@
 package kr.or.ddit.Controller;
 
+import java.io.Console;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -194,7 +196,7 @@ public class BoardController {
 	
 	@GetMapping("/list")
 	public String list(Model model) {
-		List<MemVO> list = memberService.list();
+		List<MemVO> list = this.memberService.list();
 		
 		for(MemVO vo : list) {
 			log.info(vo.toString());
@@ -202,5 +204,21 @@ public class BoardController {
 		
 		model.addAttribute("list",list);
 		return "board/list";
+	}
+	
+	@GetMapping("/insert")
+	public String insertMember() {
+		return "board/insert";
+	}
+	
+	@PostMapping("/insert")
+	public String insertMemberPost(MemVO memVO) {
+		log.info("insertMemberPost");
+		log.info("memVO : " + memVO.toString());
+		int result = this.memberService.insertMem(memVO);
+		
+		log.info("result : " + result);
+		
+		return "redirect:/board/list";
 	}
 }
