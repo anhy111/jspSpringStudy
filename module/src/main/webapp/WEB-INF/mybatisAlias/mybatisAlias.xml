@@ -14,5 +14,6 @@
 	</settings>
 	<!-- 자주 사용하는 타입의 별칭을 세팅 -->
 	<typeAliases>
+		<typeAlias type="kr.or.ddit.vo.CaptureVO" alias="captureVO"/>
 	</typeAliases>
 </configuration>

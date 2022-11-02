@@ -5,29 +5,42 @@
 	이를 구별하기 위한 식별 용도로 사용 -->
 <mapper namespace="member">
 
-	<select id="list" resultType="memVO">
-		SELECT
-		    MEM_ID,
-		    MEM_PASS,
-		    MEM_NAME,
-		    MEM_REGNO1,
-		    MEM_REGNO2,
-		    MEM_BIR,
-		    MEM_ZIP,
-		    MEM_ADD1,
-		    MEM_ADD2,
-		    MEM_HOMETEL,
-		    MEM_COMTEL,
-		    MEM_HP,
-		    MEM_MAIL,
-		    MEM_JOB,
-		    MEM_LIKE,
-		    MEM_MEMORIAL,
-		    MEM_MEMORIALDAY,
-		    MEM_MILEAGE,
-		    MEM_DELETE
-		FROM
-			MEMBER
+	<sql id="where">
+		<!-- 통합검색 -->
+	   	AND (MEM_ID LIKE '%' || #{keyword} || '%' 
+	    OR  MEM_NAME LIKE '%' || #{keyword} || '%'
+	    OR  MEM_JOB LIKE '%' || #{keyword} || '%'
+	    OR  MEM_LIKE LIKE '%' || #{keyword} || '%'
+	    OR  MEM_HP LIKE '%' || #{keyword} || '%')
+	</sql>
+
+	<select id="list" parameterType="hashMap" resultType="memVO">
+		WITH T AS(
+		    SELECT ROW_NUMBER() OVER (ORDER BY MEM_ID ASC) RNUM
+		         , MEM_ID, MEM_NAME, MEM_JOB, MEM_LIKE, MEM_HP
+		    FROM MEMBER
+		    WHERE 1 = 1
+		    <if test="keyword!=null and keyword!=''">
+		    	<include refid="where"></include>
+		    </if>
+		)
+		SELECT * FROM T
+		WHERE T.RNUM BETWEEN #{currentPage} * #{show} - (#{show}-1) AND #{currentPage} * #{show}
+	</select>
+	
+	<select id="getTotal" parameterType="hashMap" resultType="int">
+		select count(*) from member
+		where 1 = 1
+	 	<if test="keyword!=null and keyword!=''">
+			<include refid="where"></include>
+		</if>
+	</select>
+	
+	<select id="existMem" parameterType="memVO" resultType="int">
+		select count(*)
+		from member
+		where 
+			mem_id = #{memId}
 	</select>
 	
 	<insert id="insertMem" parameterType="memVO">
@@ -37,14 +50,16 @@
 		        mem_pass,
 		        mem_name,
 		        mem_job,
-		        mem_like
+		        mem_like,
+		        mem_hp
 		    )
 		VALUES (
 		       #{memId},
 		       #{memPass},
 		       #{memName},
 		       #{memJob},
-		       #{memLike}
+		       #{memLike},
+		       #{memHp}
 		)
 	</insert>
 	

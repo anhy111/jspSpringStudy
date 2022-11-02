@@ -5,6 +5,7 @@ import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.interceptor.BeanFactoryCacheOperationSourceAdvisor;
@@ -15,12 +16,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import kr.or.ddit.service.MemberService;
+import kr.or.ddit.util.ArticlePage;
 import kr.or.ddit.vo.BookVO;
 import kr.or.ddit.vo.MemVO;
 import lombok.val;
@@ -195,15 +200,35 @@ public class BoardController {
 	}
 	
 	@GetMapping("/list")
-	public String list(Model model) {
-		List<MemVO> list = this.memberService.list();
+	public ModelAndView list(ModelAndView mav,@RequestParam(defaultValue = "1",required = false) int currentPage,
+						@RequestParam Map<String, String> map) {
+		
+		String cPage = map.get("currentPage");
+		String show = map.get("show");
+		String keyword = map.get("keyword");
+		if(cPage == null) {
+			map.put("currentPage", "1");
+		}
+		if(show == null) {
+			map.put("show", "10");
+		}
+		if(keyword == null) {
+			map.put("keyword", "");
+		}
+		
+		List<MemVO> list = this.memberService.list(map);
+		
+		int total = this.memberService.getTotal(map);
+		int crtPage = Integer.parseInt(map.get("currentPage"));
+		int size = Integer.parseInt(map.get("show"));
 		
 		for(MemVO vo : list) {
 			log.info(vo.toString());
 		}
 		
-		model.addAttribute("list",list);
-		return "board/list";
+		mav.setViewName("board/list");
+		mav.addObject("data",new ArticlePage<MemVO>(total, crtPage, size, list));
+		return mav;
 	}
 	
 	@GetMapping("/insert")
@@ -221,4 +246,16 @@ public class BoardController {
 		
 		return "redirect:/board/list";
 	}
+	
+	@ResponseBody
+	@PostMapping("/duplicate")
+	public String duplicate(MemVO memVO) {
+		log.info("memVO : " + memVO);
+		int result = memberService.existMem(memVO);
+		if(result > 0) {
+			return "1";
+		}
+		return "0";
+	}
+	
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="capture">
+	<insert id="insert" parameterType="captureVO">
+		insert into capture(SEQ, FILENAME, NAME)
+            values(SEQ_CAPTURE.nextval, #{filename},#{name})
+	</insert>
+	
+	<select id="select" parameterType="captureVO" resultType="captureVO">
+		select SEQ, FILENAME, NAME
+		from capture 
+		where
+			name = #{name}
+	</select>
+</mapper>
+
+
+
+
+
+
+

@@ -2,6 +2,7 @@ package kr.or.ddit.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,13 @@ public class MemberServiceImpl implements MemberService{
 	
 	
 	@Override
-	public List<MemVO> list() {
-		return this.memberDao.list();
+	public List<MemVO> list(Map<String, String> map) {
+		return this.memberDao.list(map);
+	}
+	
+	@Override
+	public int getTotal(Map<String, String> map) {
+		return this.memberDao.getTotal(map);
 	}
 	
 	@Override
@@ -55,6 +61,14 @@ public class MemberServiceImpl implements MemberService{
 		회원 정보를 저장하다가 실패하거나 주소 정보를 저장하다가 실패하거나
 		카드 정보를 저장하다가 실패하면 모두 저장이 되지 않고 rollback됨
 	 */
+	
+	@Override
+	public int existMem(MemVO memVO) {
+		return this.memberDao.existMem(memVO);
+	}
+	
+	
+	// member2 테이블
 	@Transactional
 	@Override
 	public int memberInsert(MemberVO memberVO) {
