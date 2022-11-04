@@ -20,33 +20,10 @@
 	var imgCheck = false;
 	$(function(){
 		// 중복 검사
-		$("#duplicate").on("click",function(){
-			let memId = $("[name='memId']").val();
-			
-			if(memId == ""){
-				alert("아이디를 입력해주세요");
-				return;
-			}
-			
-			$.ajax({
-				url: "/board/duplicate",
-				method: "POST",
-				data : {"memId" : memId},
-				success:function(data){
-					if(data == '1'){
-						alert("아이디가 존재합니다");
-					} else{	//중복 통과
-						alert('사용 가능한 아이디 입니다.');
-						$("#memId").attr("readonly", "readonly");
-						$("#duplicate").attr("disabled","disabled");
-						duplicateCheck = true;
-					}
-				}
-			});
-		});
+		$("#duplicate").on("click",samDup);
 		
 		// 유효성
-		$("#btn").on("click",validation);
+		$("#frm").submit(validation);
 		
 		// 이미지 미리보기
 		let sel_file = [];
@@ -75,8 +52,7 @@
 				reader.onload = function(e){
 					// e.target : 이미지 객체
 					// e.target.result : reader가 이미지를 다 읽은 결과
-					console.log(e.target);
-					let img_html = "<img src=\"" + e.target.result + "\" />";
+					let img_html = "<img src=\"" + e.target.result + "\" /><br>";
 					
 					$(".imgs_wrap").append(img_html);
 				}
@@ -89,40 +65,89 @@
 		}// end handleImgFileSelect()
 	});
 	
-	function validation(){
+	// 나의 중복체크
+	function myDup(){
+		let memId = $("[name='memId']").val();
 		
-		let memPass = $("#memPass").val();
-		let memName = $("#memName").val();
-		let memJob = $("#memJob").val();
-		let memLike = $("#memLike").val();
-		let memHp = $("#memHp").val();
-		let memImage = $("#memImage").val();
-		let frm = document.querySelector("#frm");
-		
-		
-		if(!duplicateCheck){
-			alert("중복확인을 해주세요.");
+		if(memId == ""){
+			alert("아이디를 입력해주세요");
 			return;
 		}
 		
-		if(memPass && memName && memJob && memLike
-				&& memHp && memImage){
-			alert("모두 입력해 주세요.");
+		$.ajax({
+			url: "/board/duplicate",
+			method: "POST",
+			data : {"memId" : memId},
+			success:function(data){
+				if(data == '1'){
+					alert("아이디가 존재합니다");
+				} else{	//중복 통과
+					alert('사용 가능한 아이디 입니다.');
+					$("#memId").attr("readonly", "readonly");
+					$("#duplicate").attr("disabled","disabled");
+					duplicateCheck = true;
+				}
+			}
+		});
+	}
+	
+	// 선생님 중복체크
+	function samDup(){
+		
+		let memId = $("[name='memId']").val();
+		
+		if(memId==""){
+			alert("아이디가 없습니다. 아이디를 입력해 주세요.");
+			$("#memId").focus();
 			return;
-		} 
+		}
+		
+		let data = {"memId" : memId};
+		
+		$.ajax({
+			url: "/board/chkDup",
+			contentType: "application/json;charset=utf-8",
+			data: JSON.stringify(data),
+			type: "post",
+			success:function(data){
+				console.log("result : " + JSON.stringify(data));
+				console.log("result.result : " + data.result);
+				
+				let dupRslt = data.result;
+				let $btn = $("#btn");
+				if(dupRslt > 0){
+					alert("사용중인 아이디가 있습니다.");
+					$("#memId").focus();
+					$btn.attr("disabled","disabled");
+				} else{
+					alert("사용 가능한 아이디 입니다.");
+					$("#memId").attr("readonly","readonly");
+					$btn.attr("disabled",false);
+					duplicateCheck = true;
+				}
+			}
+		});
+	}
+	
+	function validation(){
+	
+		let memHp = document.querySelector("#memHp").value;
+		
+		if(!duplicateCheck){
+			alert("중복확인을 해주세요.");
+			return false;
+		}
 		
 	    if (!(/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/.test(memHp))
 	    		|| memHp.length < 12) {
 	    	alert("유효하지않은 전화번호 입니다.");
-	        return;
+			return false;
 	    }
 	    
 	    if(!imgCheck){
 	    	alert("이미지 확장자만 가능합니다.");
-	    	return;
+			return false;
 	    }
-	    
-	    frm.submit();
 	    
 	}
 </script>
@@ -140,38 +165,40 @@
                 <form id="frm" class="user" action="/board/insert" method="post" enctype="multipart/form-data">
                     <div class="form-group row">
                         <input type="text" class="form-control form-control-user col-9" id="memId"
-                            name="memId" placeholder="userId" >
+                            name="memId" placeholder="userId" required>
                         <input class="btn btn-primary col-2 offset-1" type="button" id="duplicate" value="중복확인" />
                     </div>
                     <div class="form-group row">
                         <input type="password" class="form-control form-control-user"
-                            id="memPass" name="memPass" placeholder="password" >
+                            id="memPass" name="memPass" placeholder="password" required>
                     </div>
                     <div class="form-group row">
                         <input type="text" class="form-control form-control-user"
-                            id="memName" name="memName" placeholder="name" >
+                            id="memName" name="memName" placeholder="name" required>
                     </div>
                     <div class="form-group row">
                         <input type="text" class="form-control form-control-user"
-                            id="memJob" name="memJob" placeholder="job" >
+                            id="memJob" name="memJob" placeholder="job" required>
                     </div>
                     <div class="form-group row">
                         <input type="text" class="form-control form-control-user"
-                            id="memLike" name="memLike" placeholder="like" >
+                            id="memLike" name="memLike" placeholder="like" required>
                     </div>
                     <div class="form-group row">
                         <input type="text" class="form-control form-control-user"
-                            id="memHp" name="memHp" placeholder="Hp" >
+                            id="memHp" name="memHp" placeholder="Hp" required>
                     </div>
-					<div class="input-group mb-3 row">
-					  <input id="memImage" type="file" name="memImage" class="form-control" multiple id="memImage" >
-					  <label class="input-group-text" for="memImage">Upload</label>
+					<div class="mb-3">
+					  <input class="form-control" type="file" id="memImage" name="memImage" multiple required>
 					</div>
 					<div class="input-group row imgs_wrap"></div>
                     <br>
-                    <button id="btn" type="button" class="btn btn-primary btn-user btn-block">
-                        Register
+                    <button id="btn" type="submit" class="btn btn-primary btn-user btn-block" disabled>
+                        	등록
                     </button>
+                    <a href="/board/list" class="btn btn-secondary btn-user btn-block">
+                        	목록
+                    </a>
                 </form>
                 <hr>
                 <div class="text-center">

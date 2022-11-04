@@ -149,7 +149,7 @@
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-jdbc</artifactId>
-		    <version>${org.springframework-version}</version> 
+		    <version>${org.springframework-version}</version>
 		</dependency>
 		
 		
@@ -249,6 +249,19 @@
 		</dependency>
 		
 		<!-- //////////// 파일 업로드 의존관계 끝 //////////// -->
+		
+		<!-- 입력값 검증을 위한 라이브러리 의존관계 정의 -->
+		<!-- 
+			스프링 MVC는 Bean(VO) Validation 기능을 이용해 요청 파라미터 값이
+			바인딩된 도메인 클래스(VO)입력값 검증을 함
+		 -->
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-validator</artifactId>
+		    <version>5.4.2.Final</version>
+		</dependency>
+		
 	</dependencies>
     <build>
         <plugins>

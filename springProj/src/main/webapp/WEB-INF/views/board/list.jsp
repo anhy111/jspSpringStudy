@@ -112,7 +112,7 @@
 										<tr class="odd">
 									</c:if>
 										<td class="sorting_1">${mem.memId}</td>
-										<td>${mem.memName}</td>
+										<td><a href="/board/detail?memId=${mem.memId}">${mem.memName}</a></td>
 										<td>${mem.memJob}</td>
 										<td>${mem.memLike}</td>
 										<td>${mem.memHp}</td>

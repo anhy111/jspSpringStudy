@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- namespace : xml파일은 여러개일 수 있으므로 
-	이를 구별하기 위한 식별 용도로 사용 -->
-<mapper namespace="member">
+<mapper namespace="kr.or.ddit.mapper.MemMapper">
 
 	<sql id="where">
 		<!-- 통합검색 -->
@@ -13,7 +11,37 @@
 	    OR  MEM_LIKE LIKE '%' || #{keyword} || '%'
 	    OR  MEM_HP LIKE '%' || #{keyword} || '%')
 	</sql>
-
+	
+	<resultMap type="memVO" id="memAttachMap">
+		<id property="memId" column="MEM_ID" />
+		<result property="memPass" column="MEM_PASS" />
+		<result property="memName" column="MEM_NAME" />
+		<result property="memRegno1" column="MEM_REGNO1" />
+		<result property="memRegno2" column="MEM_REGNO2" />
+		<result property="memBir" column="MEM_BIR" />
+		<result property="memZip" column="MEM_ZIP" />
+		<result property="memAdd1" column="MEM_ADD1" />
+		<result property="memAdd2" column="MEM_ADD2" />
+		<result property="memHometel" column="MEM_HOMETEL" />
+		<result property="memComtel" column="MEM_COMTEL" />
+		<result property="memHp" column="MEM_HP" />
+		<result property="memMail" column="MEM_MAIL" />
+		<result property="memJob" column="MEM_JOB" />
+		<result property="memLike" column="MEM_LIKE" />
+		<result property="memMemorial" column="MEM_MEMORIAL" />
+		<result property="memMemorialday" column="MEM_MEMORIALDAY" />
+		<result property="memMileage" column="MEM_MILEAGE" />
+		<result property="memDelete" column="MEM_DELETE" />
+		<result property="filename" column="FILENAME" />
+		<collection property="attachVOList" resultMap="attachMap" />
+	</resultMap>
+	
+	<resultMap type="attachVO" id="attachMap">
+		<id property="seq" column="SEQ"/>
+		<id property="tid" column="TID"/>
+		<result property="attachName" column="ATTACH_NAME"/>
+	</resultMap>
+		
 	<select id="list" parameterType="hashMap" resultType="memVO">
 		WITH T AS(
 		    SELECT ROW_NUMBER() OVER (ORDER BY MEM_ID ASC) RNUM
@@ -62,6 +90,44 @@
 		       #{memHp}
 		)
 	</insert>
+	<select id="detail" parameterType="String" resultMap="memAttachMap">
+		SELECT
+		    M.MEM_ID,
+		    M.MEM_PASS,
+		    M.MEM_NAME,
+		    M.MEM_REGNO1,
+		    M.MEM_REGNO2,
+		    M.MEM_BIR,
+		    M.MEM_ZIP,
+		    M.MEM_ADD1,
+		    M.MEM_ADD2,
+		    M.MEM_HOMETEL,
+		    M.MEM_COMTEL,
+		    M.MEM_HP,
+		    M.MEM_MAIL,
+		    M.MEM_JOB,
+		    M.MEM_LIKE,
+		    M.MEM_MEMORIAL,
+		    M.MEM_MEMORIALDAY,
+		    M.MEM_MILEAGE,
+		    M.MEM_DELETE,
+		    M.FILENAME,
+		    A.SEQ,
+		    A.TID,
+		    A.ATTACH_NAME
+		FROM
+		    MEMBER M LEFT OUTER JOIN ATTACH A ON(M.MEM_ID = A.TID)
+		WHERE
+		    M.MEM_ID = #{memId}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	<!-- member 테이블 insert -->
 	<insert id="memberInsert" parameterType="memberVO">
@@ -87,5 +153,7 @@
 			INTO CARD VALUES(#{cardVO.userId}, #{cardVO.no}, #{cardVO.validMonth})
 		</foreach>
 	</update>
+	
+
 	
 </mapper>

@@ -1,14 +1,15 @@
 package kr.or.ddit.Controller;
 
-import java.io.Console;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.interceptor.BeanFactoryCacheOperationSourceAdvisor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,19 +17,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.or.ddit.service.MemberService;
 import kr.or.ddit.util.ArticlePage;
+import kr.or.ddit.util.FileUploadUtil;
+import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.BookVO;
 import kr.or.ddit.vo.MemVO;
-import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @RequestMapping("/board")
@@ -38,6 +40,9 @@ public class BoardController {
 	
 	@Autowired
 	MemberService memberService;
+	
+	@Inject
+	FileUploadUtil fileuploadUtil;
 	/*
 	 	요청 경로는 반드시 설정해야 하는 필수 정보
 	 	컨트롤러의 클래스 레벨과 메서드 레벨로 지정할 수 있음
@@ -247,6 +252,8 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
+	
+	// 나의 중복체크
 	@ResponseBody
 	@PostMapping("/duplicate")
 	public String duplicate(MemVO memVO) {
@@ -258,4 +265,155 @@ public class BoardController {
 		return "0";
 	}
 	
+	// 선생님 중복체크
+	@ResponseBody
+	@PostMapping("/chkDup")
+	public Map<String,String> chkDup(
+				@RequestBody Map<String, String> json){
+		
+		log.info("json : " + json);
+		
+		Map<String, String> rsltMap = new HashMap<>();
+		
+		MemVO memVO = new MemVO();
+		memVO.setMemId(json.get("memId"));
+		
+		int result = this.memberService.existMem(memVO);
+		
+		rsltMap.put("result", result+"");
+		
+		return rsltMap;
+	}
+	
+	/*
+		파일업로드 폼 방식 요청 처리
+		스프링 MVC가 지원하는 MultipartFile 매개변수로 처리
+	*/
+	@GetMapping("/register06")
+	public String register06() {
+		log.info("register06");
+		return "/board/register06";
+	}
+	
+	@PostMapping("/registerFile01")
+	public String registerFile01Post(MultipartFile picture) {
+		log.info("registerFile01");
+		log.info("originalName : " + picture.getOriginalFilename());
+		log.info("size : " + picture.getSize());
+		log.info("contentType : " + picture.getContentType());
+		
+		return "board/success";
+	}
+	
+	
+	@PostMapping("/registerFile02")
+	public String registerFile02Post(String userId, String password,
+						MultipartFile picture) {
+		log.info("registerFile02");
+		log.info("userId : " + userId);
+		log.info("password : " + password);
+		log.info("originalName : " + picture.getOriginalFilename());
+		log.info("size : " + picture.getSize());
+		log.info("contentType : " + picture.getContentType());
+		
+		return "board/success";
+	}
+	
+	@PostMapping("/registerFile03")
+	public String registerFile03Post(MemVO memVO) {
+		log.info("registerFile03");
+		log.info("memVO : " + memVO);
+		
+		log.info("originalName : " + memVO.getPicture().getOriginalFilename());
+		log.info("size : " + memVO.getPicture().getSize());
+		log.info("contentType : " + memVO.getPicture().getContentType());
+		
+		return "board/success";
+	}
+	
+	@PostMapping("/registerFile05")
+	public String registerFile05Post(MemVO memVO,
+			MultipartFile picture, MultipartFile picture2) {
+		log.info("registerFile05");
+		log.info("memVO : " + memVO);
+		
+		log.info("originalName : " + picture.getOriginalFilename());
+		log.info("size : " + picture.getSize());
+		log.info("contentType : " + picture.getContentType());
+		
+		log.info("originalName : " + picture2.getOriginalFilename());
+		log.info("size : " + picture2.getSize());
+		log.info("contentType : " + picture2.getContentType());
+		
+		return "board/success";
+	}
+	
+	@PostMapping("/registerFile06")
+	public String registerFile06Post(MemVO memVO,
+			List<MultipartFile> pictureList) {
+		log.info("registerFile06");
+		log.info("memVO : " + memVO);
+		
+		log.info("originalName : " + pictureList.get(0).getOriginalFilename());
+		log.info("size : " + pictureList.get(0).getSize());
+		log.info("contentType : " + pictureList.get(0).getContentType());
+		
+		log.info("originalName : " + pictureList.get(1).getOriginalFilename());
+		log.info("size : " + pictureList.get(1).getSize());
+		log.info("contentType : " + pictureList.get(1).getContentType());
+		
+		return "board/success";
+	}
+	
+	@PostMapping("/register/registerFile07")
+	public String registerFile07Post(MemVO memVO,
+			MultipartFile[] pictures) {
+		log.info("registerFile07");
+		log.info("memberVO : " + memVO.toString());
+		
+		MultipartFile[] pictureArray = memVO.getPictureArray();
+		
+		for(MultipartFile picture : pictureArray) {
+			log.info("originalName : " + picture.getOriginalFilename());
+			log.info("size : " + picture.getSize());
+			log.info("contentType : " + picture.getContentType());
+		}
+		
+		
+		return "register/success";
+	}
+
+	@GetMapping("/register07")
+	public String register07Get() {
+		return "board/register07";
+	}
+	
+	//요청 URI : /board/uploadAjax
+	@RequestMapping(value="/uploadAjax", method=RequestMethod.POST,
+						produces="text/plain;charset=UTF-8")
+	public ResponseEntity<String> uploadAjax(MultipartFile[] file){
+		String originalFilenName = file[0].getOriginalFilename();
+		log.info("originalFilenName" + originalFilenName);
+		ResponseEntity<String> entity = 
+					new ResponseEntity<String>("SUCCESS : "+originalFilenName, HttpStatus.OK);
+		
+		UUID uid = UUID.randomUUID();
+		
+		this.fileuploadUtil.fileUploadAction(file, uid.toString());
+		return entity;
+	}
+	
+	@GetMapping("/detail")
+	public String detail(MemVO memVO, Model model) {
+		
+		memVO = this.memberService.detail(memVO.getMemId());
+		log.info("memVO : " + memVO.toString());
+		
+		List<AttachVO> attachVOList = memVO.getAttachVOList();
+		
+		model.addAttribute("memVO",memVO);
+		model.addAttribute("attachVOList", attachVOList);
+		
+		return "board/detail";
+	}
 }

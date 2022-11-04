@@ -11,6 +11,8 @@ public interface MemberService {
 	public List<MemVO> list(Map<String, String> map);
 	public int getTotal(Map<String, String> map);
 	public int existMem(MemVO memVO);
+	public MemVO detail(String memId);
+	
 	public int insertMem(MemVO memVO);
 	public int memberInsert(MemberVO memberVO);
 }

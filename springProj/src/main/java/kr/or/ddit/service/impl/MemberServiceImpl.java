@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.ddit.dao.BookDao;
 import kr.or.ddit.dao.MemberDao;
+import kr.or.ddit.mapper.MemMapper;
 import kr.or.ddit.service.BookService;
 import kr.or.ddit.service.MemberService;
 import kr.or.ddit.util.FileUploadUtil;
@@ -30,20 +31,23 @@ public class MemberServiceImpl implements MemberService{
 	@Autowired
 	FileUploadUtil fileUploadUtil;
 	
+	@Autowired
+	MemMapper memMapper;
+	
 	
 	@Override
 	public List<MemVO> list(Map<String, String> map) {
-		return this.memberDao.list(map);
+		return this.memMapper.list(map);
 	}
 	
 	@Override
 	public int getTotal(Map<String, String> map) {
-		return this.memberDao.getTotal(map);
+		return this.memMapper.getTotal(map);
 	}
 	
 	@Override
 	public int insertMem(MemVO memVO) {
-		int result = this.memberDao.insertMem(memVO);
+		int result = this.memMapper.insertMem(memVO);
 		if(result > 0) {
 			// 파일업로드 및 insert 수행 1)
 //			FileUploadUtil.fileUploadAction(productVO.getProductImage(),
@@ -64,7 +68,12 @@ public class MemberServiceImpl implements MemberService{
 	
 	@Override
 	public int existMem(MemVO memVO) {
-		return this.memberDao.existMem(memVO);
+		return this.memMapper.existMem(memVO);
+	}
+	
+	@Override
+	public MemVO detail(String memId) {
+		return this.memMapper.detail(memId);
 	}
 	
 	
@@ -72,8 +81,8 @@ public class MemberServiceImpl implements MemberService{
 	@Transactional
 	@Override
 	public int memberInsert(MemberVO memberVO) {
-		this.memberDao.memberInsert(memberVO);
-		this.memberDao.addressInsert(memberVO);
+		this.memMapper.memberInsert(memberVO);
+		this.memMapper.addressInsert(memberVO);
 		
 		List<CardVO> cardVOList = memberVO.getCardVOList();
 		log.info("memberVO : " + memberVO);
@@ -85,7 +94,7 @@ public class MemberServiceImpl implements MemberService{
 			cardVOList2.add(vo);
 		}
 		
-		return this.memberDao.insertCard(cardVOList2);
+		return this.memMapper.insertCard(cardVOList2);
 		
 	}
 	
