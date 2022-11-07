@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- I. after : 인가(authorization) 불허 -->
+	<!-- bean : 객체 / class : 우리가 만들 클래스 / id : 우리가 만든 클래스를 인스턴스화 하여 만든 객체명 -->
+	<bean id="customAccessDenied" class="kr.or.ddit.security.CustomAccessDeniedHandler"></bean>
+	
+	<!-- II.after : 인증(authentication) 성공 -->
+	<bean id="customLoginSuccess" 
+		class="kr.or.ddit.security.CustomLoginSuccessHandler"></bean>
+	
+	<!-- III.after : 비밀번호를 암호화하는 것을 사용자 정의로 처리해보자. -->
+	<bean id="customPasswordEncoder" 
+		class="kr.or.ddit.security.CustomNoOpPasswordEncoder"></bean>
+	
+	<!-- III -> V. after : 사용자가 이미 정해놓은 테이블과 컬럼명으로 로그인 처리를 해보자 -->
+	<bean id="customUserDetailsService"
+		class="kr.or.ddit.security.CustomUserDetailsService"></bean>
+	
+	<!-- xmlns : xml namespace의 약자 -->
+	<!-- Role : 권한 -->
+	<!-- permitAll : 누구나 접근 가능 / hasRole : 권한을 갖은자인가? -->
+	<security:http>
+<!-- 		<security:intercept-url pattern="/board/blist" access="permitAll" /> -->
+<!-- 		<security:intercept-url pattern="/board/bregister" access="hasRole('ROLE_MEMBER')" /> -->
+<!-- 		<security:intercept-url pattern="/notice/nlist" access="permitAll" /> -->
+<!-- 		<security:intercept-url pattern="/notice/nregister" access="hasRole('ROLE_ADMIN')" /> -->
+<!-- 		<security:intercept-url pattern="/product/products" access="hasRole('ROLE_MEMBER')" /> -->
+		<!-- 로그인 시 폼 기반 인증 기능을 사용한다 -->
+		<!-- II.before -->
+		<!-- 접근 제한에 걸리면 시큐리티가 기본적으로 제공하는 로그인 페이지로 이동 -->
+<!-- 		<security:form-login /> -->
+		<!-- II.after -->
+		<!-- 사용자가 정의한 로그인(인증 : authentication) 페이지의 URI를 지정 -->
+		<!-- authentication-success-handler-ref : 
+			 인증 성공 시 처리해줄 클래스의 인스턴스 명 -->
+		<security:form-login login-page="/member/loginMember"
+			authentication-success-handler-ref="customLoginSuccess" />
+		
+		<!-- I. before -->
+		<!-- 1) 선제조건 :  user / 비밀번호가 맞아야 함 => 회원은 맞는데..
+			 2) 들어가려는 URI에 대한 권한이 없어야 함
+			접근 거부 처리자의 URI를 지정
+			접근이 거부되었을 때 보여줄 화면
+		 -->
+<!-- 		<security:access-denied-handler error-page="/security/accessError"/> -->
+		<!-- I. after -->
+		<!-- 접근 거부 발생 시 좀 더 다양한 처리를 해보자. AccessDeniedHandler를 직접 구현해보자-->
+		<!-- 등록한 CustomAccessDeniedHandler를 접근 거부 처리자로 지정 -->
+		<security:access-denied-handler ref="customAccessDenied" />
+		<!-- dataSource를 통해 지정한 Database의 약속된 테이블(PERSISTENT_LOGINS)을
+		이용하여 기존 로그인 정보를 기록함 -->
+		<!-- token-validity-seconds : 쿠키의 유효시간(초) 604800초는 7일 -->
+		<security:remember-me data-source-ref="dataSource" 
+		token-validity-seconds="604800" />
+		
+		<!-- 로그아웃 처리를 위해 URI를 지정하고, 로그아웃 후에 세션을 무효화 -->
+		<!-- 로그아웃을 하면 자동 로그인에 사용된 쿠키도 함께 삭제해 줌 -->
+		<security:logout logout-url="/logout" invalidate-session="true" 
+		delete-cookies="remember-me,JSESSION_ID" />
+	</security:http>
+	<!-- ROLE_MEMBER, ROLE_ADMIN 권한을 가진 자가 누구인가를 설정 -->
+	<!-- 메모리상에 아이디와 비밀번호를 지정하고 로그인을 처리함 
+		스프링 시큐리티 5버전부터는 비밀번호 암호화 처리기를 반드시 이용하도록 변경이 됨
+		암호화 처리기를 사용하지 않도록 하려면 "{noop}" 문자열을 비밀번호 앞에 사용하면 됨
+	-->
+	<security:authentication-manager>
+		<!-- III.before : 사용자/비밀번호정보 -->
+		<!-- 지정된 아이디와 비밀번호로 로그인이 가능하도록 설정 -->
+		<!-- authentication : 인증(톨게이트) -->
+		<!-- authorization :  인가(권한) -->
+<!-- 		<security:authentication-provider> -->
+<!-- 			<security:user-service> -->
+				<!-- member회원은  ROLE_MEMBER 권한을 갖은 자-->
+<!-- 				<security:user name="member" password="{noop}1234"  -->
+<!-- 					authorities="ROLE_MEMBER"/> -->
+				<!-- admin회원은 ROLE_MEMBER 및 ROLE_ADMIN 권한을 갖은 자 -->
+<!-- 				<security:user name="admin" password="{noop}abcd"  -->
+<!-- 					authorities="ROLE_MEMBER,ROLE_ADMIN"/> -->
+<!-- 			</security:user-service> -->
+<!-- 		</security:authentication-provider> -->
+		<!-- III.after : 사용자/비밀번호정보 -->
+		<!-- 
+			users-by-username-query : 인증 시 필요한 쿼리
+			authorities-by-username-query : 권한 확인 시 필요한 쿼리
+		 -->
+<!-- 		<security:authentication-provider> -->
+<!-- 			<security:jdbc-user-service data-source-ref="dataSource" -->
+<!-- 				users-by-username-query="select username, password, enabled from users where username=?" -->
+<!-- 				authorities-by-username-query="select b.username, a.authority from authorities a, users b -->
+<!-- 					where  a.username = b.username and b.username = ?" -->
+<!-- 			/> -->
+		<!-- V. after -->
+		<!-- 사용자 정의 컬럼을 사용해보자 -->
+		<security:authentication-provider user-service-ref="customUserDetailsService">
+			<!-- 스프링 시큐리니티 5부터 기본적으로 PasswordEncoder를 지정해야 하는데,
+				그 이유는 사용자 테이블(USERS)에 비밀번호를 암호화하여 저장해야 하므로..
+				우리는 우선 비밀번호를 암호화 처리 하지 않았으므로
+				암호화 하지 않는 PasswordEncoder를 직접 구현하여 지정하기로 함
+			 -->
+			<security:password-encoder ref="customPasswordEncoder" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+

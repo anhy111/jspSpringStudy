@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace : xml파일은 여러개일 수 있음. 
+이를 구별하기 위한 식별 용도로 사용 -->
+<mapper namespace="kr.or.ddit.mapper.BomMapper">
+	<select id="list" resultType="bomVO">
+		SELECT U.*
+		FROM
+		(
+		    WITH T AS(
+		        SELECT ITEM_ID, PARENT_ID
+		             , LPAD('ㄴ',2*(LEVEL-1),'ㄴ') || ITEM_NAME ITEM_NAME
+		             , ITEM_QTY
+		             , LEVEL LVL
+		        FROM   BOM
+		        START WITH PARENT_ID IS NULL
+		        CONNECT BY PRIOR ITEM_ID = PARENT_ID
+		        ORDER SIBLINGS BY ITEM_QTY DESC
+		    ) 
+		    SELECT ROWNUM RNUM, T.ITEM_ID, T.PARENT_ID, T.ITEM_NAME, T.ITEM_QTY, T.LVL
+		    FROM   T
+		    WHERE  1 = 1
+		) U
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+

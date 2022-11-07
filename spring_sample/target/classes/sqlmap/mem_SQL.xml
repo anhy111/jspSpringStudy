@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace : xml파일은 여러개일 수 있음. 
+이를 구별하기 위한 식별 용도로 사용 -->
+<mapper namespace="kr.or.ddit.mapper.MemMapper">
+	<sql id="where">
+		<!-- 전체검색 -->
+	    <if test="keyword!=null and cond==''">
+	    	AND (
+	    			M.USER_NO LIKE    '%' || #{keyword} || '%' OR
+	    			M.USER_ID LIKE    '%' || #{keyword} || '%' OR
+	    			M.USER_NAME LIKE  '%' || #{keyword} || '%'
+	    		)
+	    </if>
+	    <!-- 조건검색 -->
+	    <if test="cond!=null and cond!=''">
+	    	<choose>
+	    		<when test="cond=='userNo'">
+					AND    M.USER_NO LIKE '%' || #{keyword} || '%'
+				</when>
+				<when test="cond=='userId'">
+					AND    M.USER_ID LIKE '%' || #{keyword} || '%'
+				</when>
+				<when test="cond=='userName'">
+					AND    M.USER_NAME LIKE '%' || #{keyword} || '%'
+				</when>
+			</choose>
+		</if>
+	</sql>
+	
+	<!-- id="memList" 에서 호출 -->
+	<!-- type : 자바빈 클래스(VO) -->
+	<resultMap type="memVO" id="memMap">
+		<!-- 1명의 회원 -->
+		<result property="pnum" column="PNUM" />
+		<result property="rnum" column="RNUM" />
+		<result property="userNo" column="USER_NO" />
+		<result property="userId" column="USER_ID" />
+		<result property="userPw" column="USER_PW" />
+		<result property="userName" column="USER_NAME" />
+	    <result property="coin" column="COIN" />
+	    <result property="regDate" column="REG_DATE" />
+	    <result property="updDate" column="UPD_DATE" />
+	    <result property="enabled" column="ENABLED" />
+	    <!-- 여러 개의 권한 -->
+	    <collection property="memAuthVOList" resultMap="memAuthMap"></collection>
+	</resultMap>
+	
+	<!-- 회원 상세 보기 -->
+	<resultMap type="memVO" id="memDetailMap">
+		<!-- 1명의 회원 -->
+		<result property="userNo" column="USER_NO" />
+		<result property="userId" column="USER_ID" />
+		<result property="userPw" column="USER_PW" />
+		<result property="userName" column="USER_NAME" />
+	    <result property="coin" column="COIN" />
+	    <result property="regDate" column="REG_DATE" />
+	    <result property="updDate" column="UPD_DATE" />
+	    <result property="enabled" column="ENABLED" />
+	    <!-- 여러 개의 권한 -->
+	    <collection property="memAuthVOList" resultMap="memAuthMap"></collection>
+	</resultMap>
+	
+	<resultMap type="memAuthVO" id="memAuthMap">
+		<result property="userNo" column="USER_NO" />
+		<result property="auth" column="AUTH" />
+	</resultMap>
+
+	<!-- 회원번호 생성 -->
+	<select id="makeUserNo" resultType="int">
+		SELECT NVL(MAX(USER_NO) + 1
+		     , TO_CHAR(SYSDATE,'YYYY') || '001') userNo
+		FROM   MEM
+		WHERE  USER_NO LIKE TO_CHAR(SYSDATE,'YYYY') || '%'
+	</select>
+	
+	<!-- 아이디 중복 체크 -->
+	<select id="dupChk" parameterType="memVO" resultType="int">
+		SELECT COUNT(*) cnt
+		FROM   MEM
+		WHERE  USER_ID = #{userId}
+	</select>
+	
+	<!-- 회원테이블(MEM) INSERT -->
+	<insert id="insertMem" parameterType="memVO">
+		INSERT INTO MEM(USER_NO, USER_ID, USER_PW, USER_NAME, COIN, REG_DATE, UPD_DATE, ENABLED)
+		VALUES(#{userNo},#{userId},#{userPw},#{userName},0,SYSDATE,NULL,1)
+	</insert>
+	
+	<!-- 회원 권한 테이블(MEM_AUTH) INSERT -->
+	<!-- 
+	List<MemAuthVO>
+	//memAuthVOList=[MemAuthVO(userNo=2022002, auth=manager)
+	//, MemAuthVO(userNo=2022002, auth=employee), MemAuthVO(userNo=2022002, auth=employer)])
+	-->
+	<update id="insertMemAuth" parameterType="java.util.List">
+		<foreach collection="list" item="memAuthVO" open="INSERT ALL" close="SELECT * FROM DUAL"
+			separator=" ">
+			INTO MEM_AUTH VALUES(#{memAuthVO.userNo},#{memAuthVO.auth})
+		</foreach>
+	</update>
+	
+	<!-- 첨부 테이블(ATTACH) INSERT 
+	parameterType : List<AttachVO>
+	-->
+	<update id="insertAttach" parameterType="java.util.List">
+		<foreach collection="list" item="attachVO" open="INSERT ALL"
+			close="SELECT * FROM DUAL" separator=" ">
+		INTO ATTACH VALUES(#{attachVO.userNo},#{attachVO.seq}
+			,#{attachVO.filename},#{attachVO.filesize},SYSDATE)
+		</foreach>
+	</update>
+	
+	<!-- 회원목록 -->
+	<!-- 
+		map : {size=10, cond=userName, keyword=127, currentPage=1}
+	-->
+	<select id="memList" parameterType="hashMap" resultMap="memMap">
+		WITH U AS(
+			SELECT DENSE_RANK() OVER(ORDER BY T.RNUM DESC) PNUM
+         		 , T.*
+			FROM
+			(
+			    SELECT DENSE_RANK() OVER (ORDER BY M.USER_NO ASC) RNUM
+				     , M.USER_NO, M.USER_ID, M.USER_PW, M.USER_NAME
+				     , M.COIN, M.REG_DATE, M.UPD_DATE, M.ENABLED
+				     , MA.AUTH
+				FROM   MEM M, MEM_AUTH MA
+				WHERE  M.USER_NO = MA.USER_NO(+)
+			    <include refid="where"></include>
+			)  T
+			ORDER BY T.RNUM DESC
+		)
+		SELECT U.* FROM U
+		WHERE PNUM BETWEEN (#{currentPage} * 10) - (10 - 1) AND (#{currentPage} * 10)
+	</select>
+	
+	<!-- 회원 전체 수(검색 포함) -->
+	<!-- 
+		map : {size=10, cond=userName, keyword=127}
+	-->
+	<select id="memTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*) cnt
+		FROM   MEM M
+		WHERE 1 = 1
+		<include refid="where"></include>
+	</select>
+	
+	<!-- 회원상세정보 -->
+	<!--
+	드루와 : userNo(String)
+	가즈아 : memVO
+	 -->
+	 <select id="detail" parameterType="String" resultMap="memDetailMap">
+	 	SELECT A.USER_NO, A.USER_ID, A.USER_PW, A.USER_NAME, A.COIN, A.REG_DATE, A.UPD_DATE, A.ENABLED
+		     , B.AUTH
+		FROM   MEM A, MEM_AUTH B
+		WHERE  A.USER_NO = B.USER_NO
+		AND    A.USER_NO = #{username}
+	 </select>
+	 
+	 
+	 <!-- 새로운 MEM테이블에 insert -->
+	 <insert id="memInsert" parameterType="memVO">
+	 	<selectKey order="BEFORE" keyProperty="userNo" resultType="int">
+		 	SELECT NVL(MAX(USER_NO),TO_CHAR(SYSDATE,'YYYYMM"000"'))+1 FROM MEM
+			WHERE TO_CHAR(SYSDATE, 'YYYYMM') = SUBSTR(USER_NO,1,6)
+		</selectKey>
+		
+		INSERT INTO MEM(USER_NO, USER_ID, USER_PW, USER_NAME, USER_EMAIL, UPD_DATE)
+		VALUES(#{userNo}, #{userId}, #{userPw}, #{userName}, #{userEmail}, #{updDate})
+	 </insert>
+	 
+	 <!-- 1 -->
+	 <resultMap type="memVO" id="memVOMap">
+	 	<result property="userNo" column="USER_NO" />
+	    <result property="userId" column="USER_ID" />
+	    <result property="userName" column="USER_NAME" />
+	    <collection property="attachVOList" resultMap="attachVOMap" />
+	 </resultMap>
+	 
+	 
+	 <!-- N -->
+	 <resultMap type="attachVO" id="attachVOMap">
+	    <result property="userNo" column="USER_ID" />
+	    <result property="seq" column="SEQ" />
+	    <result property="filename" column="FILENAME" />
+	 </resultMap>
+	 <!-- 새로운 mem 테이블 list -->
+	 <select id="memList2" resultMap="memVOMap">
+	 	SELECT M.USER_NO
+		     , M.USER_ID
+		     , M.USER_NAME
+		     , A.SEQ
+		     , A.FILENAME
+		FROM 
+		    MEM M LEFT OUTER JOIN ATTACH A ON(M.USER_ID = A.USER_NO)
+		ORDER BY 
+			M.USER_NO
+	 </select>
+	 
+	 
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
