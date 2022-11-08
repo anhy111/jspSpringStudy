@@ -4,13 +4,16 @@
 <script type="text/javascript" src="/resources/js/jquery-3.6.0.js"></script>
 <script type="text/javascript">
 	var fileList;
-	var fileCnt = 1;
-	var arr;
+	var fileCnt = 2;
+	var arr = [];
 	$(function(){
-		arr = "${attachVOList}";
 		fileList = document.querySelector("#fileList");
 		$("#addBtn").on("click",fileAdd);
 		$("#rmvBtn").on("click",fileRmv);
+		let fileArr = document.querySelectorAll("#fileList div");
+		arr.push(fileArr[0]);
+		arr.push(fileArr[1]);
+		
 		
 	});
 	
@@ -41,20 +44,21 @@
 		let span = document.createElement("span");
 		span.id = '"attachVOList'+fileCnt+'.filename.errors"';
 		font.appendChild(span);
+		let div = document.createElement("div");
 		
-		fileList.appendChild(br);
-		fileList.appendChild(input);
-		fileList.appendChild(font);
+		div.appendChild(br);
+		div.appendChild(input);
+		div.appendChild(font);
+		fileList.appendChild(div);
 		fileCnt++;
 	}
 	
 	function fileRmv(){
-		fileList.innerHTML = 	'<input id="attachVOList0.filename" name="attachVOList[0].filename"'
-								+		'placeholder="첨부파일명" class="form-control form-control-user" type="text" value="">'
-								'<font color="red">'
-								+	'<span id="attachVOList0.filename.errors"></span>'	
-							+	'</font>';
-		fileCnt = 1;
+		if(fileCnt <= 2){
+			return;
+		}
+		fileCnt--;
+		fileList.removeChild(fileList.lastChild);			
 	}
 	
 	
@@ -110,10 +114,20 @@
 	                        	<!-- attachVOList : List<AttachVO>
 	                        		attachVOList[0] : attachVO
 	                        	 -->
-	                            <form:input class="form-control form-control-user" path="attachVOList[0].filename" placeholder="첨부파일명" />
-	                            <font color="red">
-	                                	<form:errors path="attachVOList[0].filename" />	
-	                            </font>
+	                        	<div id="attach0">
+		                        	<br>
+		                            <form:input class="form-control form-control-user" path="attachVOList[0].filename" placeholder="첨부파일명" />
+		                            <font color="red">
+		                                	<form:errors path="attachVOList[0].filename" />	
+		                            </font>
+	                            </div>
+	                            <div id="attach1">
+		                            <br>
+		                            <form:input class="form-control form-control-user" path="attachVOList[1].filename" placeholder="첨부파일명" />
+		                            <font color="red">
+		                                	<form:errors path="attachVOList[1].filename" />	
+		                            </font>
+	                            </div>
 	                        </div>
 	                        <div class="form-group row">
 	                            <div class="col-sm-6 mb-3 mb-sm-0">

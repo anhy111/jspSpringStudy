@@ -1,8 +1,11 @@
 package kr.or.ddit.controller;
 
 import java.io.FileOutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.tiles.extras.module.ModularTilesListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +16,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.service.MemService;
 import kr.or.ddit.vo.MemVO;
@@ -95,5 +101,61 @@ public class previewsController {
 		model.addAttribute("memVOList",memVOList);
 		
 		return "previews/list";
+	}
+	
+	// 회원 상세보기
+	@GetMapping("/detail")
+	public String memDetail(@RequestParam String userNo
+					, @ModelAttribute MemVO memVO
+					, Model model) {
+		
+		log.info("userNo : " + userNo);
+		
+		memVO = this.memService.memDetail(userNo);
+		log.info("memVO : " + memVO);
+		
+		model.addAttribute("memVO",memVO);
+		
+		return "previews/detail";
+	}
+	
+	@ResponseBody
+	@PostMapping("/detailPwCheck")
+	public Map<String, String> detailPwCheck(@RequestBody MemVO memVO) {
+		log.info("memVO : " + memVO);
+		
+		// 비밀번호 확인
+		int result = this.memService.detailPwCheck(memVO);
+		
+		// 결과 리턴(1 이상이면 비밀번호 맞음. 0이면 비밀번호 다름)
+		Map<String, String> resultMap = new HashMap<String, String>();
+		resultMap.put("result",result + "");
+		
+		return resultMap;
+	}
+	
+	@PostMapping("/updatePost")
+	public String updatePost(@ModelAttribute MemVO memVO
+						, Model model) {
+		
+		log.info("memVO : " + memVO);
+		
+		int result = this.memService.memUpdate(memVO);
+		
+		model.addAttribute("memVO", memVO);
+		log.info("result : " + result);
+		
+		return "redirect:/previews/detail?userNo="+memVO.getUserNo();			
+	}
+	
+	@PostMapping("/deletePost")
+	public String deletePost(@ModelAttribute MemVO memVO) {
+		
+		log.info("memVo : " + memVO);
+		
+		int result = this.memService.memDelete(memVO);
+		log.info("result : " + result);
+		
+		return "redirect:/previews/list";
 	}
 }

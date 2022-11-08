@@ -37,6 +37,15 @@ public interface MemMapper {
 	
 	// 새로운 MEM테이블 list
 	public List<MemVO> memList2();
+	
+	// 새로운 mem테이블 detail
+	public MemVO memDetail(String userNo);
+	
+	public int detailPwCheck(MemVO memVO);
+	
+	public int memUpdate(MemVO memVO);
+	
+	public int memDelete(MemVO memVO);
 }
 
 

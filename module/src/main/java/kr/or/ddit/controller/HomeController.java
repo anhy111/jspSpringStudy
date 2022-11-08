@@ -47,8 +47,8 @@ public class HomeController {
 		CaptureVO captureVO = new CaptureVO();
 		captureVO.setName("안하용");
 		
-		List<CaptureVO> select = captureService.select(captureVO);
-		model.addAttribute("data",select);
+		List<CaptureVO> captureVOList = captureService.select(captureVO);
+		model.addAttribute("captureVO",captureVOList.get(0));
 		
 		return "face";
 	}

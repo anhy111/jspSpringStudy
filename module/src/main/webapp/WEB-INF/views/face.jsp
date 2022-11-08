@@ -38,8 +38,8 @@
 	function startVideo() {
 		navigator.mediaDevices
 			.getUserMedia({ video: true })
-			.then( (stream) => { video.srcObject = stream; })
-			.catch( (err) => { console.log(err); });
+			.then( (stream) => { video.srcObject = stream })
+			.catch( (err) => { console.log(err) });
 	}
 
 	video.addEventListener('play', () =>{
@@ -48,6 +48,12 @@
 		document.body.append(canvas);
 		const displaySize = { width: video.width, height:video.height};
 		faceapi.matchDimensions(canvas, displaySize);
+		
+		// 로컬 대조 이미지 가져오기
+		const labeledFaceDescriptors = await loadImage();
+		
+		
+		
 		setInterval(async () => {
 			const detections = await faceapi.detectAllFaces(video,
 			new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks()
@@ -60,6 +66,25 @@
 			faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
 		}, 100)
 	});
+	
+	const loadImage = async () => {
+	   // 업로드 된 이미지 이름을 배열에 담아 라벨링 합니다.
+		const labels = ["hayong"];
+	
+		return Promise.all(
+			labels.map(async (label) => {
+				const images = await faceapi.fetchImage(require('/resources/upload/${captureVO.filename}.png'));
+				const descriptions = [];
+				const detections = await faceapi
+				  .detectSingleFace(images)
+				  .withFaceLandmarks()
+				  .withFaceDescriptor();
+				descriptions.push(detections.descriptor);
+				
+				return new faceapi.LabeledFaceDescriptors(label, descriptions);
+			})
+		);
+	};
 
 </script>
 </body>

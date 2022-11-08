@@ -9,10 +9,11 @@ web.xml : tomcat서버의 설정
 -->
 
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+<!-- 	/WEB-INF/spring/security-context.xml -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/spring/root-context.xml
-		/WEB-INF/spring/security-context.xml
+		
 		</param-value>
 	</context-param>
 	
@@ -77,14 +78,14 @@ web.xml : tomcat서버의 설정
 	</filter-mapping>
 	
 	<!-- 스프링 시큐리티가 제공하는 서블릿 필터 클래스를 서블릿 컨테이너에 등록함 -->
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+<!-- 	<filter> -->
+<!-- 		<filter-name>springSecurityFilterChain</filter-name> -->
+<!-- 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> -->
+<!-- 	</filter> -->
+<!-- 	<filter-mapping> -->
+<!-- 		<filter-name>springSecurityFilterChain</filter-name> -->
+<!-- 		<url-pattern>/*</url-pattern> -->
+<!-- 	</filter-mapping> -->
 	
 	<!-- 상태 코드를 사용하여 오류 페이지 설정 시작
 	HTTP 오류 코드 정리

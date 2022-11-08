@@ -22,4 +22,12 @@ public interface MemService {
 	public int memInsert(MemVO memVO);
 	// 새로운 MEM테이블 list
 	public List<MemVO> memList2();
+	
+	public MemVO memDetail(String userNo);
+	
+	public int detailPwCheck(MemVO memVO);
+	
+	public int memUpdate(MemVO memVO);
+	
+	public int memDelete(MemVO memVO);
 }

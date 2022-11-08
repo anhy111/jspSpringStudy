@@ -93,6 +93,26 @@ public class MemServiceImpl implements MemService {
 	public List<MemVO> memList2() {
 		return this.memMapper.memList2();
 	}
+	
+	@Override
+	public MemVO memDetail(String userNo) {
+		return this.memMapper.memDetail(userNo);
+	}
+	
+	@Override
+	public int detailPwCheck(MemVO memVO) {
+		return this.memMapper.detailPwCheck(memVO);
+	}
+	
+	@Override
+	public int memUpdate(MemVO memVO) {
+		return this.memMapper.memUpdate(memVO);
+	}
+	
+	@Override
+	public int memDelete(MemVO memVO) {
+		return this.memMapper.memDelete(memVO);
+	}
 }
 
 

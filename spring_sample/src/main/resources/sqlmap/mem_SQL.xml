@@ -200,7 +200,46 @@
 			M.USER_NO
 	 </select>
 	 
+	 	 <!-- 1 -->
+	 <resultMap type="memVO" id="memVOMap2">
+	 	<id property="userNo" column="USER_NO" />
+	    <result property="userId" column="USER_ID" />
+	    <result property="userName" column="USER_NAME" />
+	    <result property="userPw" column="USER_PW" />
+	    <result property="userEmail" column="USER_EMAIL" />
+	    <result property="coin" column="COIN" />
+	    <result property="regDate" column="REG_DATE" />
+	    <result property="updDate" column="UPD_DATE" />
+	    <result property="enabled" column="ENABLED" />
+	    <collection property="attachVOList" resultMap="attachVOMap" />
+	 </resultMap>
 	 
+	 <!-- 회원 상세 보기 -->
+	 <select id="memDetail" parameterType="String" resultMap="memVOMap2">
+		select M.USER_NO, M.USER_ID, M.USER_PW, M.USER_NAME, M.USER_EMAIL
+		     , M.COIN, M.REG_DATE, M.UPD_DATE, M.ENABLED
+		     , A.FILENAME
+		from MEM M LEFT OUTER JOIN ATTACH A ON(M.USER_ID = A.USER_NO)
+		WHERE M.USER_NO = #{userNo}
+	 </select>
+	 
+	 <select id="detailPwCheck" parameterType="memVO" resultType="int">
+	 	SELECT COUNT(*)
+	 	FROM MEM
+	 	WHERE USER_NO = #{userNo} 
+	 	AND USER_PW = #{userPw}
+	 </select>
+	 
+	 <update id="memUpdate" parameterType="memVO">
+		UPDATE MEM
+		SET USER_NAME = #{userName}, USER_EMAIL=#{userEmail}, UPD_DATE=SYSDATE
+		WHERE USER_NO = #{userNo}
+	 </update>
+	 
+	 <delete id="memDelete" parameterType="memVO">
+	 	delete from mem
+		where user_no = #{userNo}
+	 </delete>
 </mapper>
 
 
