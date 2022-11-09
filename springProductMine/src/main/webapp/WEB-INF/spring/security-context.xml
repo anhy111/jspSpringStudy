@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:security="http://www.springframework.org/schema/security"
+   xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+      
+    <!-- customAccessDenied 처리 -->
+    <bean id="customAccessDenied"
+    	class="kr.or.ddit.security.CustomAccessDeniedHandler"></bean>
+    	
+    <bean id="customLoginSuccess" 
+    	class="kr.or.ddit.security.customLoginSuccessHandler"></bean>
+    	
+    <bean id="customPasswordEncoder"
+    	class="kr.or.ddit.security.CustomNoOpPasswordEncoder"></bean>
+    
+    
+	<!-- xmlns(XML NameSpace) : 변수명 -->
+	<security:http>
+		<!-- URI 패턴으로 접근 제한을 설정 -->
+		<security:intercept-url pattern="/board/list" access="permitAll"/>
+		<security:intercept-url pattern="/board/register" 
+										access="hasRole('ROLE_MEMBER')"/>
+		<security:intercept-url pattern="/notice/list" access="permitAll"/>
+		<security:intercept-url pattern="/notice/register" 
+										access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/addProduct" 
+										access="hasRole('ROLE_ADMIN')"/>
+		<!-- 접근 제한에 걸리면 시큐리티가 기본적으로 제공하는 로그인 페이지로 이동 -->
+<!-- 		<security:form-login /> -->
+		
+		<!-- 사용자가 정의한 로그인 페이지의 URI 지정 -->
+		<security:form-login login-page="/security/login"
+			authentication-success-handler-ref="customLoginSuccess" />
+		
+		<!-- 접근 거부 처리자의 URI 지정 -->
+<!-- 		<security:access-denied-handler ref="/security/accessError"/> -->
+		<security:access-denied-handler ref="customAccessDenied"/>
+		
+		<!-- 로그아웃 처리를 위한 URI를 지정하고, 세션 삭제 -->
+		<security:logout logout-url="/logout" invalidate-session="true" />
+	</security:http>
+	
+	<!-- 인증매니저(아이디, 비밀번호) -->
+	<!-- 
+		noop?
+		스프링 시큐리티 5버전부터는 비밀번호 암호화 처리기를 반드시 이용하도록 변경됨
+		암호화 처리기를 사용하지 않도록 noop 문자열을 비밀번호 앞에 사용함
+	 -->
+	<security:authentication-manager>
+	
+	
+		<security:authentication-provider>
+			<!-- 데이터 소스(root-context.xml)를 지정함 -->
+			<security:jdbc-user-service data-source-ref="dataSource" />
+			<!-- 사용자가 정의한 비밀번호 암호화 처리기를 지정함 -->
+			<security:password-encoder ref="customPasswordEncoder"/>
+			
+			
+			<!-- 지정된 아이디와 비밀번호로 로그인이 가능하도록 설정 -->
+<!-- 			<security:user-service> -->
+<!-- 				<security:user name="member" password="{noop}1234" -->
+<!-- 					authorities="ROLE_MEMBER" /> -->
+<!-- 				<security:user name="admin" password="{noop}abcd" -->
+<!-- 					authorities="ROLE_MEMBER, ROLE_ADMIN"/> -->
+<!-- 			</security:user-service>	 -->
+		</security:authentication-provider>
+	
+	</security:authentication-manager>
+</beans>

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/mvc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+<beans:beans xmlns="http://www.springframework.org/schema/mvc" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:beans="http://www.springframework.org/schema/beans" 
+xmlns:context="http://www.springframework.org/schema/context" 
+xmlns:security="http://www.springframework.org/schema/security" 
+xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context.xsd 
+http://www.springframework.org/schema/security 
+http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
@@ -42,6 +48,7 @@
 	<!-- 다국어 처리 끝 -->
 	
 	<context:component-scan base-package="kr.or.ddit" />
+	<context:component-scan base-package="kr.or.ddit.security" />
 	
 	<!-- 첨부 파일을 처리하는 빈 설정 -->
 	<beans:bean id="multipartResolver"
@@ -52,5 +59,14 @@
 		<beans:constructor-arg value="C:\\upload"></beans:constructor-arg>
 	</beans:bean>
 	
-	
+	<!-- 스프링 시큐리티 애너테이션 활성화
+		pre-post-annotations -> 골뱅이PreAuthorize, 골뱅이PostAuthorize 활성화
+		***골뱅이PreAuthorize : 특정 메소드를 실행하기 전에 role(권한)을 체킹	
+		
+		2. secured-annotations -> 골뱅이Secured를 활성화
+			Secured : 스프링 시큐리티 모듈을 지원하기 위한 애너테이션
+	-->
+	<security:global-method-security pre-post-annotations="enabled"
+			secured-annotations="enabled" />
+		
 </beans:beans>

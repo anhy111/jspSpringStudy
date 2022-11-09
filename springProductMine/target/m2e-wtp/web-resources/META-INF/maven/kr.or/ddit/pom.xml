@@ -203,7 +203,51 @@
 		</dependency>
 		<!-- json데이터 바인딩(메모리에 올림)을 위한 의존 라이브러리 끝 -->
 
+		<!-- 스프링 시큐리티 라이브러리 의존 관계 정의 시작 -->
 		
+		<!-- 스프링 시큐리티? 보안 기능 구현하는 프레임 워크(디자인패턴, 라이브러리 집합)
+				필터 기반으로 동작하므로 스프링 MVC와 분리되어 동작함
+			1. 인증(Authentication) : 로그인
+			2. 인가(Authorization) : 권한
+			
+			세션관리, 로그인 처리, CSRF 토큰 처리, 비밀번호 암호화 처리, 자동 로그인
+			
+			CSRF(Cross-site Request(요청) forgery(위조))?
+				공격자가 수정, 삭제, 등록 등 특정 웹사이트에 요청하게 하는 공격
+		-->
+		<!-- 스프링 시큐리티 웹에서 동작하도록 해줌 -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-web</artifactId>
+		    <version>5.0.7.RELEASE</version>
+		</dependency>
+		
+		<!-- 스프링 시큐리티 설정을 도와줌 -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-config</artifactId>
+		    <version>5.0.7.RELEASE</version>
+		</dependency>
+		
+		<!-- 스프링 시큐리티 일반기능 -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-core</artifactId>
+		    <version>5.0.7.RELEASE</version>
+		</dependency>
+		
+		<!-- 스프링 시큐리티와 태그라이브러리를 연결해줌 -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs -->
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-taglibs</artifactId>
+		    <version>5.0.7.RELEASE</version>
+		</dependency>
+		
+		<!-- 스프링 시큐리티 라이브러리 의존 관계 정의 끝 -->
 		
 	</dependencies>
     <build>
