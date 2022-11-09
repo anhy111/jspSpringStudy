@@ -32,7 +32,8 @@
 		faceapi.nets.tinyFaceDetector.loadFromUri('/resources/models'),
 		faceapi.nets.faceLandmark68Net.loadFromUri('/resources/models'),
 		faceapi.nets.faceRecognitionNet.loadFromUri('/resources/models'),
-		faceapi.nets.faceExpressionNet.loadFromUri('/resources/models')
+		faceapi.nets.faceExpressionNet.loadFromUri('/resources/models'),
+		faceapi.nets.ssdMobilenetv1.loadFromUri('/resources/models')
 	]).then(startVideo)
 
 	function startVideo() {
@@ -42,43 +43,18 @@
 			.catch( (err) => { console.log(err) });
 	}
 
-	video.addEventListener('play', () =>{
-		const canvas = faceapi.createCanvasFromMedia(video); 
-		var context = canvas.getContext('2d');
-		document.body.append(canvas);
-		const displaySize = { width: video.width, height:video.height};
-		faceapi.matchDimensions(canvas, displaySize);
-		
-		// 로컬 대조 이미지 가져오기
-		const labeledFaceDescriptors = await loadImage();
-		
-		
-		
-		setInterval(async () => {
-			const detections = await faceapi.detectAllFaces(video,
-			new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks()
-			.withFaceExpressions();
-			const resizedDetections = faceapi.resizeResults(detections,
-			displaySize)
-			context.clearRect(0, 0, canvas.width, canvas.height);
-			faceapi.draw.drawDetections(canvas, resizedDetections);
-			faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-			faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
-		}, 100)
-	});
-	
 	const loadImage = async () => {
-	   // 업로드 된 이미지 이름을 배열에 담아 라벨링 합니다.
+	    // 업로드 된 이미지 이름을 배열에 담아 라벨링 합니다.
 		const labels = ["hayong"];
 	
 		return Promise.all(
 			labels.map(async (label) => {
-				const images = await faceapi.fetchImage(require('/resources/upload/${captureVO.filename}.png'));
+				const images = await faceapi.fetchImage('/resources/upload/${captureVO.filename}.png');
 				const descriptions = [];
 				const detections = await faceapi
-				  .detectSingleFace(images)
-				  .withFaceLandmarks()
-				  .withFaceDescriptor();
+				.detectSingleFace(images)
+				.withFaceLandmarks()
+				.withFaceDescriptor();
 				descriptions.push(detections.descriptor);
 				
 				return new faceapi.LabeledFaceDescriptors(label, descriptions);
@@ -86,6 +62,50 @@
 		);
 	};
 
+	video.addEventListener('play', async () =>{
+		const canvas = faceapi.createCanvasFromMedia(video); 
+		var context = canvas.getContext('2d');
+		document.body.append(canvas);
+		const displaySize = { width: video.width, height:video.height};
+		faceapi.matchDimensions(canvas, displaySize);
+
+		// 로컬 대조 이미지 가져오기
+		const labeledFaceDescriptors = await loadImage();
+
+		const faceDetecting = async () => {
+			const detections = await faceapi
+				.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+				.withFaceLandmarks()
+				.withFaceExpressions()
+				.withFaceDescriptors();
+
+			const resizedDetections = faceapi.resizeResults(detections, displaySize);
+
+			// canvas 초기화
+			canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+
+			const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
+
+			resizedDetections.forEach((detection, i) => {
+				const matched = resizedDetections[i];
+				const box = matched.detection.box;
+				const label = faceMatcher.findBestMatch(matched.descriptor).toString();
+				const drawBox = new faceapi.draw.DrawBox(box, {
+				label: label,
+				});
+				drawBox.draw(canvas);
+				// 기본 안면 인식 테두리, 겹치므로 제외
+				// 감정 읽기
+				faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+			});
+		}
+		const loop = () => {
+			faceDetecting();
+			setTimeout(loop, 1);
+		};
+		setTimeout(loop, 1);
+	});
+	
 </script>
 </body>
 </html>
