@@ -48,6 +48,15 @@
 					  <input type="password" name="password" class="form-control" id="password" placeholder="비밀번호" />
 					</div>
 					<div class="mb-3">
+					  	<div class="form-check">
+					  	<!-- 로그인 상태 유지 체크박스 -->
+						  <input class="form-check-input" type="checkbox" name="remember-me" id="remember-me">
+						  <label class="form-check-label" for="remember-me">
+						    Remember-Me
+						  </label>
+						</div>
+					</div>
+					<div class="mb-3">
 						<input type="submit" value="로그인" />
 					</div>
 				</div>

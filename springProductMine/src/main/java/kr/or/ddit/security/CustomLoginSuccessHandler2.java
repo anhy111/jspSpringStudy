@@ -18,7 +18,7 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class customLoginSuccessHandler2 extends
+public class CustomLoginSuccessHandler2 extends
 				SavedRequestAwareAuthenticationSuccessHandler{
 	private RequestCache requestCache = new HttpSessionRequestCache();
 	

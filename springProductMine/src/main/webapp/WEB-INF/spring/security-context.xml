@@ -10,10 +10,15 @@
     	class="kr.or.ddit.security.CustomAccessDeniedHandler"></bean>
     	
     <bean id="customLoginSuccess" 
-    	class="kr.or.ddit.security.customLoginSuccessHandler"></bean>
+    	class="kr.or.ddit.security.CustomLoginSuccessHandler"></bean>
     	
     <bean id="customPasswordEncoder"
     	class="kr.or.ddit.security.CustomNoOpPasswordEncoder"></bean>
+    	
+    <!-- 스프링 시큐리티의 UserDetails를 구현한 클래스를 빈으로 등록.
+    	우리들 테이블로써 인증/인가 처리하기 위함 -->
+   	<bean id="customUserDetailsService"
+   		class="kr.or.ddit.security.CustomUserDetailsService"></bean>
     
     
 	<!-- xmlns(XML NameSpace) : 변수명 -->
@@ -38,8 +43,15 @@
 <!-- 		<security:access-denied-handler ref="/security/accessError"/> -->
 		<security:access-denied-handler ref="customAccessDenied"/>
 		
+		
+		<!-- 데이터소스를 지정하고 테이블을 이용해서 기존 로그인 정보를 기록함(PERSISTENT_LOGINS 테이블) -->
+		<!-- 쿠키의 유효시간을 지정함 -->
+		<security:remember-me data-source-ref="dataSource"
+			token-validity-seconds="604800"/>
+		
 		<!-- 로그아웃 처리를 위한 URI를 지정하고, 세션 삭제 -->
-		<security:logout logout-url="/logout" invalidate-session="true" />
+		<security:logout logout-url="/logout" invalidate-session="true" 
+			delete-cookies="remember-me,JSESSION_ID"/>
 	</security:http>
 	
 	<!-- 인증매니저(아이디, 비밀번호) -->
@@ -51,9 +63,14 @@
 	<security:authentication-manager>
 	
 	
-		<security:authentication-provider>
-			<!-- 데이터 소스(root-context.xml)를 지정함 -->
-			<security:jdbc-user-service data-source-ref="dataSource" />
+		<security:authentication-provider user-service-ref="customUserDetailsService">
+			<!-- 1. 데이터 소스(root-context.xml)를 지정함 -->
+			<!-- 2. data-source-ref만 작성시 기본 users테이블과 authorities테이블을 참조
+				쿼리를 작성하여 user와 권한에 대한 정보를 가져올 수 있음 -->
+<!-- 			<security:jdbc-user-service data-source-ref="dataSource"  -->
+<!-- 				users-by-username-query="SELECT MEM_ID , MEM_PASS, ENABLED FROM MEMBER WHERE MEM_ID = ?"  -->
+<!-- 				authorities-by-username-query="SELECT M.MEM_ID, MA.AUTH FROM MEMBER M, MEMBER_AUTH MA -->
+<!-- 												WHERE M.MEM_ID = MA.MEM_ID AND   M.MEM_ID = ?"/> -->
 			<!-- 사용자가 정의한 비밀번호 암호화 처리기를 지정함 -->
 			<security:password-encoder ref="customPasswordEncoder"/>
 			

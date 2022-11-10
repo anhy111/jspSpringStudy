@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 	 	(스프링 시큐리티에서 기본적으로 사용되는 구현 클래스)
 */
 @Slf4j
-public class customLoginSuccessHandler extends
+public class CustomLoginSuccessHandler extends
 				SavedRequestAwareAuthenticationSuccessHandler{
 	
 	@Override

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemberMapper">
+	
+	<resultMap type="memberVO" id="memberMap">
+      <result property="memId" column="MEM_ID" />
+      <result property="memPass" column="MEM_PASS" />
+      <result property="memName" column="MEM_NAME" />
+      <result property="memRegno1" column="MEM_REGNO1" />
+      <result property="memRegno2" column="MEM_REGNO2" />
+      <result property="memBir" column="MEM_BIR" />
+      <result property="memZip" column="MEM_ZIP" />
+      <result property="memAdd1" column="MEM_ADD1" />
+      <result property="memAdd2" column="MEM_ADD2" />
+      <result property="memHometel" column="MEM_HOMETEL" />
+      <result property="memComtel" column="MEM_COMTEL" />
+      <result property="memHp" column="MEM_HP" />
+      <result property="memMail" column="MEM_MAIL" />
+      <result property="memJob" column="MEM_JOB" />
+      <result property="memLike" column="MEM_LIKE" />
+      <result property="memMemorial" column="MEM_MEMORIAL" />
+      <result property="memMemorialday" column="MEM_MEMORIALDAY" />
+      <result property="memMileage" column="MEM_MILEAGE" />
+      <result property="memDelete" column="MEM_DELETE" />
+      <result property="enabled" column="ENABLED" />
+      
+      <collection property="memberAuthVOList" resultMap="authMap"></collection>
+   </resultMap>
+   
+   <resultMap type="MemberAuthVO" id="authMap">
+      <result property="memId" column="MEM_ID" />
+      <result property="auth" column="AUTH" />
+   </resultMap>
+	
+	<select id="read" parameterType="String" resultMap="memberMap">
+		SELECT A.MEM_ID
+		     , A.MEM_PASS
+		     , A.MEM_NAME
+		     , A.MEM_REGNO1
+		     , A.MEM_REGNO2
+		     , A.MEM_BIR
+		     , A.MEM_ZIP
+		     , A.MEM_ADD1
+		     , A.MEM_ADD2
+		     , A.MEM_HOMETEL
+		     , A.MEM_COMTEL
+		     , A.MEM_HP
+		     , A.MEM_MAIL
+		     , A.MEM_JOB
+		     , A.MEM_LIKE
+		     , A.MEM_MEMORIAL
+		     , A.MEM_MEMORIALDAY
+		     , A.MEM_MILEAGE
+		     , A.MEM_DELETE
+		     , A.ENABLED
+		     , AUTH.AUTH
+		FROM   MEMBER A LEFT OUTER JOIN MEMBER_AUTH AUTH ON(A.MEM_ID = AUTH.MEM_ID)
+		WHERE  A.MEM_ID = #{memId}
+	</select>
+</mapper>
+
+
+
+
+
+
+
