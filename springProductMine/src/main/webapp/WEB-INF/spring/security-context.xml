@@ -74,7 +74,6 @@
 			<!-- 사용자가 정의한 비밀번호 암호화 처리기를 지정함 -->
 			<security:password-encoder ref="customPasswordEncoder"/>
 			
-			
 			<!-- 지정된 아이디와 비밀번호로 로그인이 가능하도록 설정 -->
 <!-- 			<security:user-service> -->
 <!-- 				<security:user name="member" password="{noop}1234" -->

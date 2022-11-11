@@ -33,12 +33,22 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 				
+		<!-- AOP 관련 의존관계 정의 시작 -->
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>${org.aspectj-version}</version>
+			<version>1.5.4</version>
 		</dependency>	
+		
+		<!-- Aspectjweaver -->
+		<dependency>
+			<groupId>aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		
+		<!-- AOP 관련 의존관계 정의 끝 -->
 		
 		<!-- Logging -->
 		<dependency>
