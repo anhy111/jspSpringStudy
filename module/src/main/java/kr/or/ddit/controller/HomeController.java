@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,21 +43,24 @@ public class HomeController {
 	public static String CAPTURE_PATH = "C:\\Users\\PC-18\\git\\jspSpringStudy\\module\\src\\main\\webapp\\resources\\upload\\";
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String home(Model model) {
 		
 		CaptureVO captureVO = new CaptureVO();
 		captureVO.setName("안하용");
 		
 		List<CaptureVO> captureVOList = captureService.select(captureVO);
-		model.addAttribute("captureVO",captureVOList.get(0));
+		
+		model.addAttribute("captureVOList",captureVOList);
 		
 		return "face";
 	}
+	
 	
 	@RequestMapping(value = "/capture",method = RequestMethod.GET)
 	public String capture() {
 		return "capture";
 	}
+	
 	
 	@ResponseBody
 	@RequestMapping(value = "/capture",method = RequestMethod.POST)
@@ -101,17 +105,7 @@ public class HomeController {
 		return "success";
 	}
 	
-	
-	@RequestMapping(value = "/load",method = RequestMethod.GET)
-	public String load(Model model) {
-		CaptureVO captureVO = new CaptureVO();
-		captureVO.setName("안하용");
-		
-		List<CaptureVO> select = captureService.select(captureVO);
-		model.addAttribute("data",select);
-		
-		return "load";
-	}
+
 	
 	
 }

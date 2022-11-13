@@ -32,7 +32,6 @@
 		faceapi.nets.tinyFaceDetector.loadFromUri('/resources/models'),
 		faceapi.nets.faceLandmark68Net.loadFromUri('/resources/models'),
 		faceapi.nets.faceRecognitionNet.loadFromUri('/resources/models'),
-		faceapi.nets.faceExpressionNet.loadFromUri('/resources/models'),
 		faceapi.nets.ssdMobilenetv1.loadFromUri('/resources/models')
 	]).then(startVideo)
 
@@ -43,18 +42,23 @@
 			.catch( (err) => { console.log(err) });
 	}
 
+	// 로컬에서 이미지 가져오기
 	const loadImage = async () => {
 	    // 업로드 된 이미지 이름을 배열에 담아 라벨링 합니다.
-		const labels = ["hayong"];
-	
+    	arr = '${captureVOList}';
+		const labels = JSON.parse(arr);
+		console.log(labels);
 		return Promise.all(
 			labels.map(async (label) => {
-				const images = await faceapi.fetchImage('/resources/upload/${captureVO.filename}.png');
+				const images = await faceapi.fetchImage('/resources/upload/'+label+'.png');
 				const descriptions = [];
 				const detections = await faceapi
 				.detectSingleFace(images)
 				.withFaceLandmarks()
 				.withFaceDescriptor();
+				if(detections == undefined){
+					console.log(label);
+				}
 				descriptions.push(detections.descriptor);
 				
 				return new faceapi.LabeledFaceDescriptors(label, descriptions);
@@ -76,7 +80,6 @@
 			const detections = await faceapi
 				.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
 				.withFaceLandmarks()
-				.withFaceExpressions()
 				.withFaceDescriptors();
 
 			const resizedDetections = faceapi.resizeResults(detections, displaySize);
@@ -94,9 +97,6 @@
 				label: label,
 				});
 				drawBox.draw(canvas);
-				// 기본 안면 인식 테두리, 겹치므로 제외
-				// 감정 읽기
-				faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
 			});
 		}
 		const loop = () => {
