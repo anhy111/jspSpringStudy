@@ -105,7 +105,21 @@ public class HomeController {
 		return "success";
 	}
 	
-
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login() {
+		return "login"; 
+	}
 	
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public String loginPost(String name, Model model) {
+		CaptureVO captureVO = new CaptureVO();
+		captureVO.setName(name);
+		
+		List<CaptureVO> list = captureService.select(captureVO);
+		
+		model.addAttribute("captureVOList", list);
+		
+		return "face";
+	}
 	
 }

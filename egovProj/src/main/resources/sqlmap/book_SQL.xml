@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.BookMapper">
+
+	<select id="list" resultType="bookVO">
+	
+		SELECT BOOK_ID, TITLE, CATEGORY, PRICE, CONTENT, INSERT_DATE
+		FROM   BOOK
+		
+	</select>
+	
+	<select id="detail" parameterType="String" resultType="bookVO">
+	
+		SELECT BOOK_ID, TITLE, CATEGORY, PRICE, CONTENT, INSERT_DATE
+		FROM BOOK 
+		WHERE BOOK_ID = ${bookId}
+	</select>
+	
+	<update id="updateBook" parameterType="bookVO">
+	
+		UPDATE BOOK
+		SET 
+			TITLE = #{title}
+		  , CATEGORY=#{category}
+		  , PRICE = #{price}
+		  , CONTENT = #{content}
+		  , INSERT_DATE = SYSDATE
+		WHERE 
+		    BOOK_ID = #{bookId}
+	
+	</update>
+	
+	<delete id="delete" parameterType="BookVO">
+		delete from book
+		where book_id = #{bookId}
+	</delete>
+	
+	<insert id="insert" parameterType="bookVO">
+		<selectKey order="BEFORE" keyProperty="bookId" resultType="int">
+			SELECT NVL(MAX(BOOK_ID),0)+1 FROM BOOK
+		</selectKey>
+		
+		INSERT INTO BOOK(BOOK_ID, TITLE, CATEGORY, PRICE, CONTENT, INSERT_DATE)
+    		VALUES(#{bookId},#{title},#{category},#{price},#{content},SYSDATE)
+	</insert>
+	
+	<select id="getBookId" resultType="int">
+	
+		SELECT NVL(MAX(BOOK_ID),0)+1 bookId FROM BOOK
+	
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+

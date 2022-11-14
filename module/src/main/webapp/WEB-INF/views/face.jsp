@@ -47,7 +47,6 @@
 	    // 업로드 된 이미지 이름을 배열에 담아 라벨링 합니다.
     	arr = '${captureVOList}';
 		const labels = JSON.parse(arr);
-		console.log(labels);
 		return Promise.all(
 			labels.map(async (label) => {
 				const images = await faceapi.fetchImage('/resources/upload/'+label+'.png');
@@ -56,9 +55,6 @@
 				.detectSingleFace(images)
 				.withFaceLandmarks()
 				.withFaceDescriptor();
-				if(detections == undefined){
-					console.log(label);
-				}
 				descriptions.push(detections.descriptor);
 				
 				return new faceapi.LabeledFaceDescriptors(label, descriptions);
@@ -96,14 +92,15 @@
 				const drawBox = new faceapi.draw.DrawBox(box, {
 				label: label,
 				});
+				console.log(label);
 				drawBox.draw(canvas);
 			});
 		}
 		const loop = () => {
 			faceDetecting();
-			setTimeout(loop, 1);
+			setTimeout(loop, 10);
 		};
-		setTimeout(loop, 1);
+		loop();
 	});
 	
 </script>
