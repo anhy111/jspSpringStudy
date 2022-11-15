@@ -3,7 +3,9 @@ package kr.or.ddit.controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.aspectj.apache.bcel.generic.NEW;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,17 @@ public class BookController {
 		model.addAttribute("bookVOList",bookVOList);
 		
 		return "book/list";
+	}
+	
+	@ResponseBody
+	@GetMapping("/listAjax")
+	public List<BookVO> listAjax(){
+		
+		List<BookVO> list = this.bookService.list();
+		
+		log.info("list : " + list);
+		
+		return list;
 	}
 	
 	@GetMapping("/detail")

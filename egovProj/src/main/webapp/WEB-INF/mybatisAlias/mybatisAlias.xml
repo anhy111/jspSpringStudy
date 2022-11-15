@@ -14,6 +14,7 @@
 	<!-- 자주 사용하는 타입의 별칭을 세팅 -->
 	<typeAliases>
 		<typeAlias type="kr.or.ddit.vo.BookVO" alias="bookVO"/>
+		<typeAlias type="kr.or.ddit.vo.AttachVO" alias="attachVO"/>
 	</typeAliases>
 </configuration>
 

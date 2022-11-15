@@ -46,6 +46,8 @@
 			
 			$updateBtn1.css("display","none");
 			$updateBtn2.css("display","block");
+			
+			CKEDITOR.instances['content'].setReadOnly(false);
 		});
 		
 		$("#cancel").on("click",function(){
@@ -53,11 +55,14 @@
 			$inputs.val( (p_inx) => { return defaultData[p_inx] })
 				   	.attr("readonly", "true");
 			
+			
 			$date.css("display","block");
 			
 
 			$updateBtn1.css("display","block");
 			$updateBtn2.css("display","none");
+			
+			CKEDITOR.instances['content'].setReadOnly(true);
 			
 		});
 		
@@ -72,19 +77,19 @@
 					.submit();
 		});
 		
+		CKEDITOR.replace( "content" );
 	});
 </script>
 </head>
 <body>
 	<section class="content">
 		<div class="container-fluid">
-
 			<div class="row">
 				<div class="col-md-12">
 					<form:form modelAttribute="bookVO">
-						<div class="card card-default">
+						<div class="card card-primary">
 							<div class="card-header">
-								<h3 class="card-title">상세정보</h3>
+								<h3 class="card-title">도서 정보</h3>
 							</div>
 							<div class="card-body p-0">
 								<div class="bs-stepper linear">
@@ -109,6 +114,12 @@
 													id="price" name="price" type="text" class="form-control"
 													value='<fmt:formatNumber value="${bookVO.price}" pattern="#,###" />' />
 											</div>
+											<div class="form-group">
+												<label for="inputDescription">Content</label>
+												<textarea name="content"
+													id="content" class="form-control rounded-0"
+													readonly>${bookVO.content}</textarea>
+											</div>
 											<div class="form-group" id="date">
 												<label>InsertDate</label>
 												<div class="input-group">
@@ -120,12 +131,6 @@
 													<form:input type="date" class="form-control float-right"
 														path="insertDate" />
 												</div>
-											</div>
-											<div class="form-group">
-												<label for="inputDescription">Content</label>
-												<p>
-												${bookVO.content}
-												</p>
 											</div>
 										</div>
 									</div>

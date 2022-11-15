@@ -3,6 +3,16 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.BookMapper">
 
+	<resultMap type="bookVO" id="bookMap">
+		<result property="bookId" column="BOOK_ID" />
+		<result property="title" column="TITLE" />
+		<result property="category" column="CATEGORY" />
+		<result property="price" column="PRICE" />
+		<result property="insertDate" column="INSERT_DATE" />
+		<result property="content" column="CONTENT" 
+				javaType="java.lang.String"  jdbcType="CLOB"  />
+	</resultMap>
+	 
 	<select id="list" resultType="bookVO">
 	
 		SELECT BOOK_ID, TITLE, CATEGORY, PRICE, CONTENT, INSERT_DATE
@@ -10,11 +20,21 @@
 		
 	</select>
 	
-	<select id="detail" parameterType="String" resultType="bookVO">
+	<!-- 
+		content 컬럼
+		CLOB 타입의 데이터를 MyBatis를 이용해 처리할 때는 resultMap 태그를 만들고 
+		타입을 지정해줘야 함. CLOB -> String 매핑
+		java database connectivity의 type : CLOB
+		java type : java.lang.String 
+	 -->
+
+	 
+	<select id="detail" parameterType="String" resultMap="bookMap">
 	
 		SELECT BOOK_ID, TITLE, CATEGORY, PRICE, CONTENT, INSERT_DATE
 		FROM BOOK 
 		WHERE BOOK_ID = ${bookId}
+		
 	</select>
 	
 	<update id="updateBook" parameterType="bookVO">

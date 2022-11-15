@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <div class="card">
 	<div class="card-header">
 		<h3 class="card-title">DataTable with default features</h3>
@@ -40,8 +41,8 @@
 								<td class="dtr-control sorting_1" tabindex="0">${bookVO.bookId}</td>
 								<td><a href="/book/detail?bookId=${bookVO.bookId}">${bookVO.title}</a></td>
 								<td>${bookVO.category}</td>
-								<td>${bookVO.price}</td>
-								<td style="">${bookVO.insertDate}</td>
+								<td><fmt:formatNumber value="${bookVO.price}" pattern="#,###" /></td>
+								<td><fmt:formatDate value="${bookVO.insertDate}" pattern="yyyy-MM-dd"/></td>
 							</tr>
 							</c:forEach>
 
