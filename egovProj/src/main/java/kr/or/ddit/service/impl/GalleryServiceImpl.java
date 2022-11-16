@@ -9,6 +9,7 @@ import kr.or.ddit.mapper.BookMapper;
 import kr.or.ddit.mapper.GalleryMapper;
 import kr.or.ddit.service.BookService;
 import kr.or.ddit.service.GalleryService;
+import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.BookVO;
 
 @Service
@@ -20,5 +21,15 @@ public class GalleryServiceImpl implements GalleryService {
 	@Override
 	public BookVO list(BookVO bookVO) {
 		return galleryMapper.list(bookVO);
+	}
+	
+	@Override
+	public int attachUpdate(AttachVO attachVO) {
+		return galleryMapper.attachUpdate(attachVO);
+	}
+	
+	@Override
+	public int attahcDelete(AttachVO attachVO) {
+		return galleryMapper.attahcDelete(attachVO);
 	}
 }

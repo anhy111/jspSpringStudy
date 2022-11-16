@@ -72,5 +72,4 @@ public class BookVO {
 		this.attachVOList = attachVOList;
 	}
 
-
 }

@@ -30,6 +30,23 @@
 		FROM BOOK B INNER JOIN ATTACH A ON(B.BOOK_ID = A.USER_NO)
 		WHERE B.BOOK_ID = #{bookId}
 	 </select>
+	 
+	 <update id="attachUpdate" parameterType="attachVO">
+	 
+	 	UPDATE ATTACH
+	 	SET FILENAME = #{filename}
+	 	WHERE USER_NO = #{userNo}
+	 	AND   SEQ = #{seq}
+	 	
+	 </update>
+	 
+	 <delete id="attahcDelete" parameterType="attachVO">
+	 
+	 	DELETE FROM ATTACH
+	 	WHERE USER_NO = #{userNo} 
+	 	AND SEQ = #{seq}
+	 
+	 </delete>
 </mapper>
 
 
