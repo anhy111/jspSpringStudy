@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -55,22 +57,44 @@ public class GalleryController {
 		
 		log.info("attahcVO : " + attachVO);
 		
+		Map<String, String> map = new HashMap<String, String>();
+		
 		int result = this.galleryService.attahcDelete(attachVO);
 		
-		Map<String, String> map = new HashMap<String, String>();
 		map.put("result",result+"");
 		
 		return map;
 	}
 	
+	/*
+		이미지 다중 등록
+		요청URI : /gallery/regist
+		방식 : get
+	 */
+	
+	@GetMapping("/regist")
+	public String regist(Model model) {
+		
+		//공통 약속
+		model.addAttribute("bodyTitle","이미지 등록");
+		
+		//forwarding
+		return "gallery/regist";
+	}
 	
 	@ResponseBody
 	@PostMapping("/updatePost")
 	public AttachVO updatePost(MultipartFile[] uploadFile,
-				@ModelAttribute AttachVO attachVO) {
+				@ModelAttribute AttachVO attachVO,
+				HttpServletRequest request) {
 		
 		log.info("uploadFile : " + uploadFile);
 		log.info("attachVO : " + attachVO);
+		log.info("uri : " + request.getRequestURI());
+		log.info("getRemoteUser : " + request.getRemoteUser());
+		log.info("getRemoteAddr : " + request.getRemoteAddr());
+		log.info("getRemoteHost : " + request.getRemoteHost());
+		log.info("getLocalAddr : " + request.getLocalAddr());
 		
 		String uploadFolder = 
 				"C:\\eGovFrameDev-3.10.0-64bit\\workspace\\jspSpringStudy\\egovProj\\src\\main\\webapp\\resources\\upload";

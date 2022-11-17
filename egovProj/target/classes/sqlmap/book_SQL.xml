@@ -11,6 +11,15 @@
 		<result property="insertDate" column="INSERT_DATE" />
 		<result property="content" column="CONTENT" 
 				javaType="java.lang.String"  jdbcType="CLOB"  />
+		<collection property="attachVOList" resultMap="attachMap" ></collection>
+	</resultMap>
+	
+	<resultMap type="attachVO" id="attachMap">
+		<result property="userNo" column="USER_NO" />
+		<result property="seq" column="SEQ" />
+		<result property="filename" column="FILENAME" />
+		<result property="filesize" column="FILESIZE" />
+		<result property="regdate" column="REGDATE" />
 	</resultMap>
 	 
 	<select id="list" resultType="bookVO">
@@ -69,6 +78,21 @@
 	
 		SELECT NVL(MAX(BOOK_ID),0)+1 bookId FROM BOOK
 	
+	</select>
+	
+	<select id="searchBook" parameterType="bookVO" resultMap="bookMap">
+	
+		WITH T AS(
+			SELECT B.BOOK_ID, B.TITLE, B.CATEGORY, B.PRICE, B.INSERT_DATE, B.CONTENT
+			        ,A.USER_NO, A.SEQ, A.FILENAME, A.FILESIZE, A.REGDATE
+			FROM BOOK B LEFT OUTER JOIN ATTACH A ON(B.BOOK_ID = A.USER_NO)
+		)
+		SELECT * FROM T
+		WHERE 1=1
+		AND (TITLE LIKE '%' || #{title} || '%' 
+		    OR CATEGORY LIKE '%' || #{title} || '%' 
+		    OR CONTENT LIKE '%' || #{title} || '%' ) 
+		
 	</select>
 </mapper>
 

@@ -44,4 +44,9 @@ public class BookServiceImpl implements BookService {
 	public int getBookId() {
 		return bookMapper.getBookId();
 	}
+	
+	@Override
+	public List<BookVO> searchBook(BookVO bookVO) {
+		return bookMapper.searchBook(bookVO);
+	}
 }

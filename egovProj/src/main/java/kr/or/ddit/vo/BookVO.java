@@ -72,4 +72,12 @@ public class BookVO {
 		this.attachVOList = attachVOList;
 	}
 
+	@Override
+	public String toString() {
+		return "BookVO [bookId=" + bookId + ", title=" + title + ", category=" + category + ", price=" + price
+				+ ", insertDate=" + insertDate + ", content=" + content + ", attachVOList=" + attachVOList + "]";
+	}
+
+
+	
 }
