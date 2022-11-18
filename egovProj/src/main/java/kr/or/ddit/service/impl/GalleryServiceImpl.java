@@ -32,4 +32,14 @@ public class GalleryServiceImpl implements GalleryService {
 	public int attahcDelete(AttachVO attachVO) {
 		return galleryMapper.attahcDelete(attachVO);
 	}
+	
+	@Override
+	public int attachInsert(List<AttachVO> list) {
+		return galleryMapper.attachInsert(list);
+	}
+	
+	@Override
+	public int getSeq(String bookId) {
+		return galleryMapper.getSeq(bookId);
+	}
 }

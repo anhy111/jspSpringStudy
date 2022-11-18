@@ -9,4 +9,6 @@ public interface GalleryService {
 	public BookVO list(BookVO bookVO);
 	public int attachUpdate(AttachVO attachVO);
 	public int attahcDelete(AttachVO attachVO);
+	public int attachInsert(List<AttachVO> list);
+	public int getSeq(String bookId);
 }

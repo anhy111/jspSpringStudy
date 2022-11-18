@@ -5,13 +5,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.input.InfiniteCircularInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -29,12 +32,16 @@ import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.BookVO;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
+import oracle.net.aso.a;
 
 @RequestMapping("/gallery")
 @Slf4j
 @Controller
 public class GalleryController {
 
+	private static String uploadFolder = 
+			"C:\\eGovFrameDev-3.10.0-64bit\\workspace\\jspSpringStudy\\egovProj\\src\\main\\webapp\\resources\\upload";
+	
 	@Autowired
 	GalleryService galleryService;
 	
@@ -73,13 +80,90 @@ public class GalleryController {
 	 */
 	
 	@GetMapping("/regist")
-	public String regist(Model model) {
+	public String regist(Model model, HttpServletRequest req) {
 		
 		//공통 약속
 		model.addAttribute("bodyTitle","이미지 등록");
 		
 		//forwarding
 		return "gallery/regist";
+	}
+	
+	@ResponseBody
+	@PostMapping("/uploadAjaxAction")
+	public Map<String, String> uploadAjaxAction(MultipartFile[] uploadFile,
+							BookVO bookVO){
+		
+		log.info("파일 업로드를 수행합니다.");
+		List<AttachVO> attachVOList = new ArrayList<AttachVO>();
+		
+		File uploadPath = new File(uploadFolder,getFolder());
+		
+		if(uploadPath.exists()==false) {
+			uploadPath.mkdirs();
+		}
+		
+		String uploadFileName = "";
+		int seq = galleryService.getSeq(bookVO.getBookId()+"");
+		
+		log.info("seq : " + seq);
+		
+		int result = 0;
+		for(MultipartFile multipartFile : uploadFile) {
+			log.info("-----------------------------------");
+			log.info("upload File Name : " + multipartFile.getOriginalFilename());
+			log.info("upload File Size : " + multipartFile.getSize());
+			uploadFileName = multipartFile.getOriginalFilename();
+			
+			// 중복 방지
+			UUID uuid = UUID.randomUUID();
+			uploadFileName = uuid.toString() + "_" + uploadFileName; 
+			
+			File saveFile = new File(uploadPath, uploadFileName);
+			
+			try {
+				// 파일 복사 실행
+				// 파일은 window경로 '\'를 구분자로 저장
+				// db저장은 '/'를 구분자로 저장
+				multipartFile.transferTo(saveFile);
+				
+				if(checkImageType(saveFile)) {
+					FileOutputStream thumnbail = new FileOutputStream(
+								new File(uploadPath, "s_" + uploadFileName)
+							);
+					// 썸네일 생성
+					Thumbnailator.createThumbnail(multipartFile.getInputStream(),
+								thumnbail,100,100);
+					thumnbail.close();
+				}
+				
+				// ATTACH 테이블에 반영
+				String folder = getFolder().replace("\\", "/");
+				AttachVO attachVO = new AttachVO();
+				attachVO.setSeq(seq++);
+				attachVO.setUserNo(bookVO.getBookId()+"");
+				attachVO.setFilename("/" + folder + "/" + uploadFileName);
+				attachVO.setFilesize(Long.valueOf(multipartFile.getSize()).intValue());
+				
+				attachVOList.add(attachVO);
+
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}// end try
+		}// end for
+		
+		for(AttachVO attachVO : attachVOList) {
+			log.info("attachVO : " + attachVO.toString());
+		}
+		// attach 테이블 다중 insert
+		result = galleryService.attachInsert(attachVOList);
+		log.info("첨부파일 insert 결과 : " + result);
+		log.info("파일 업로드 완료");
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("result", result+"");
+		
+		return map;
 	}
 	
 	@ResponseBody
@@ -90,54 +174,40 @@ public class GalleryController {
 		
 		log.info("uploadFile : " + uploadFile);
 		log.info("attachVO : " + attachVO);
-		log.info("uri : " + request.getRequestURI());
-		log.info("getRemoteUser : " + request.getRemoteUser());
-		log.info("getRemoteAddr : " + request.getRemoteAddr());
-		log.info("getRemoteHost : " + request.getRemoteHost());
-		log.info("getLocalAddr : " + request.getLocalAddr());
 		
-		String uploadFolder = 
-				"C:\\eGovFrameDev-3.10.0-64bit\\workspace\\jspSpringStudy\\egovProj\\src\\main\\webapp\\resources\\upload";
 		
-		// 연월일 폴더 생성
+		
 		File uploadPath = new File(uploadFolder,getFolder());
 		log.info("upload Path : " + uploadPath);
 		
-		// 만약 연원일 폴더가 없으면 생성
 		if(uploadPath.exists()==false) {
 			uploadPath.mkdirs();
 		}
 		
 		String uploadFileName = "";
 		//파일 배열로부터 파일을 하나씩 가져와보자.
-		for(MultipartFile multipartFilefile : uploadFile) {
+		for(MultipartFile multipartFile : uploadFile) {
 			log.info("-----------------------------------");
-			log.info("upload File Name : " + multipartFilefile.getOriginalFilename());
-			log.info("upload File Size : " + multipartFilefile.getSize());
-			uploadFileName = multipartFilefile.getOriginalFilename();
-			// 같은 날 같은 이미지 업로드 시 파일 중복 방지 시작----------------------------
-			// java.util.UUID => 랜덤값 생성
+			log.info("upload File Name : " + multipartFile.getOriginalFilename());
+			log.info("upload File Size : " + multipartFile.getSize());
+			uploadFileName = multipartFile.getOriginalFilename();
 			UUID uuid = UUID.randomUUID();
 			// 원래의 파일 이름과 구분하기 위해  _를 붙임
 			uploadFileName = uuid.toString() + "_" + uploadFileName; 
-			// 같은 날 같은 이미지 업로드 시 파일 중복 방지 끝 ----------------------------
 			
 			// File객체 설계(복사할 대상 경로, 파일명)
 			File saveFile = new File(uploadPath, uploadFileName);
 			
 			try {
-				// 파일 복사 실행
-				// 정한 경로 + 파일명으로 실제 파일을 저장
-				multipartFilefile.transferTo(saveFile);
+				multipartFile.transferTo(saveFile);
 				
 				// 썸네일 처리
-				// 이미지인지 체크
 				if(checkImageType(saveFile)) {
 					FileOutputStream thumnbail = new FileOutputStream(
 								new File(uploadPath, "s_" + uploadFileName)
 							);
 					// 썸네일 생성
-					Thumbnailator.createThumbnail(multipartFilefile.getInputStream(),
+					Thumbnailator.createThumbnail(multipartFile.getInputStream(),
 								thumnbail,100,100);
 					thumnbail.close();
 				}
@@ -187,4 +257,6 @@ public class GalleryController {
 		// 이 파일이 이미지가 아닐 경우
 		return false;
 	}
+	
+
 }
