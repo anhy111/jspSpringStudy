@@ -101,14 +101,14 @@
 
 			const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
 
-			if(resizedDetections.length > 1){
-				status.innerHTML = "얼굴이 둘 이상입니다.";
+			if(resizedDetections.length != 1 ){
+				status.innerHTML = "얼굴이 없거나 둘 이상입니다.";
 				return;
 			}	
 			
 			resizedDetections.forEach((detection, i) => {
 				
-				++detectCount;
+
 				const matched = resizedDetections[i];
 				const box = matched.detection.box;
 				const label = faceMatcher.findBestMatch(matched.descriptor).toString();
@@ -123,8 +123,8 @@
 				if(chkLabel == "unknown"){
 					 ++unknownCount;
 				}
-				
-				if(detectCount == 100){
+
+				if(detectCount >= 100){
 					clearTimeout(timeoutID);
 					canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 					status.innerHTML = "인식:"+detectCount+", unknown:"+unknownCount+"<br>";
@@ -132,7 +132,10 @@
 					// 정확도 계산을 위한 실패 횟수를 인식 횟수로 변환
 					let knownCount = detectCount - unknownCount;
 					status.innerHTML += "정확도 : " + knownCount / detectCount * 100 + "%";
+					return;
 				}
+				
+				++detectCount;
 				
 				detecth2.innerHTML = "인식횟수 : " + detectCount;
 				unknownh2.innerHTML =  " unknown횟수 : " + unknownCount;
