@@ -4,7 +4,6 @@
 
 <head>
 	<title>webRTC Color filter demo</title>
-	<script src="/resources/js/face-api.min.js"></script>
 	<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 	<style type="text/css">
 	
@@ -16,7 +15,6 @@
 		#canvas {
 			display: none;
 		}
-		
 		.top-container {
 			width: 640px;
 			margin: 0 auto;

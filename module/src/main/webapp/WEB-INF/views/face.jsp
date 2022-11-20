@@ -63,6 +63,10 @@
 	    // 업로드 된 이미지 이름을 배열에 담아 라벨링 합니다.
     	arr = '${captureVOList}';
 		const labels = JSON.parse(arr);
+    	if(labels.length == 0){
+    		alert("등록되지 않은 이름입니다.\n회원가입으로 이동합니다.");
+    		location.href = "/signup";
+    	}
 		return Promise.all(
 			labels.map(async (label) => {
 				const images = await faceapi.fetchImage('/resources/upload/'+label+'.png');
@@ -89,6 +93,8 @@
 		const labeledFaceDescriptors = await loadImage();
 
 		const faceDetecting = async () => {
+			status.innerHTML = "얼굴 인식 중";
+			
 			const detections = await faceapi
 				.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
 				.withFaceLandmarks()
@@ -105,10 +111,10 @@
 				status.innerHTML = "얼굴이 없거나 둘 이상입니다.";
 				return;
 			}	
+
 			
 			resizedDetections.forEach((detection, i) => {
 				
-
 				const matched = resizedDetections[i];
 				const box = matched.detection.box;
 				const label = faceMatcher.findBestMatch(matched.descriptor).toString();
@@ -143,7 +149,6 @@
 		}
 		
 		
-		status.innerHTML = "얼굴 인식 중";
 		const loop = () => {
 			faceDetecting();
 			timeoutID = setTimeout(loop, 10);
