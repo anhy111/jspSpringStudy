@@ -4,25 +4,11 @@
 
 <head>
 	<title>webRTC Color filter demo</title>
+	<script src="/resources/js/face-api.min.js"></script>
 	<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
 	<style type="text/css">
+	
 		body {
-			font-family: Arial, sans-sefif;
-			text-align: center;
-			font-size: 16px;
-		}
-
-		.navbar {
-			background-color: #889999;
-			width: 640px;
-			margin: 0 auto;
-			height: 35px;
-			line-height: 35px;
-		}
-
-		h1 {
-			font-size: 23px;
-			color: #fff;
 			text-align: center;
 		}
 
@@ -30,20 +16,7 @@
 		#canvas {
 			display: none;
 		}
-
-		label {
-			margin-right: 5px;
-		}
-
-		label:hover {
-			cursor: pointer;
-		}
-
-		form {
-			width: 640px;
-			margin-bottom: 20px;
-		}
-
+		
 		.top-container {
 			width: 640px;
 			margin: 0 auto;
@@ -53,31 +26,9 @@
 			border-radius: 6px;
 		}
 
-		.bottom-container {
-			margin-top: 20px;
-			width: 640px;
-			margin: 0 auto;
-			text-align: center;
-			padding: 0;
-		}
-
 		#photos {
 			width: 640px;
 			margin: 0 auto;
-		}
-
-		.btn {
-			width: 150px;
-			height: 40px;
-			border-radius: 8px;
-			border: 1px solid #778899;
-			background-color: #337799;
-			color: white;
-			margin-bottom: 20px;
-		}
-
-		.btn:hover {
-			background-color: #990000;
 		}
 	</style>
 </head>
@@ -87,15 +38,13 @@
 	WebRTC Color Filters Demo
 	<div class="top-container">
 		<video id="video">Stream not available</video>
-		<form action="/capture" method="post">
-			
-		</form>
 		<!-- select filter / CSS filters -->
-		<button id="photo-button" class="btnbtn-dark">Take photo</button>
+		<input type="text" name="name" id="name" placeholder="이름을 입력하세요" />
+		<button id="photo-button" class="btnbtn-dark">캡처</button>
 		<button id="clear-button" class="btnbtn-dark">Clear</button>
 		<canvas id="canvas"></canvas>
 		<div id="photos"></div>
-		<a class="btnbtn-dark" href="/">얼굴인식으로 가기</a>
+		<a class="btnbtn-dark" href="/login">로그인하기</a>
 	</div>
 	<!-- 캡처한 사진들을 출력 -->
 	<script type="text/javascript">
@@ -156,9 +105,17 @@
 			if (width && height) {
 				canvas.width = width;
 				canvas.height = height;
+				
+				let name = document.querySelector("#name").value;
+				
+				if(!name){
+					alert("이름을 입력하세요");
+					return;
+				}
+				
 				//캔버스에 그리기
 				context.drawImage(video, 0, 0, width, height);
-				//캔버스로붙 실제 이미지를 가져오기
+				//캔버스로 붙일 실제 이미지를 가져오기
 				const imgUrl = canvas.toDataURL('image/png');
 				//엘리먼트를 만들고 가져온 이미지를 출력하기
 				const img = document.createElement('img');
@@ -174,10 +131,11 @@
 				$.ajax({
 					type : "POST",
 					data : {
-						"img" : myImg
+						"img" : myImg,
+						"name" : name
 					},
 					dataType : "text",
-					url : "/capture",
+					url : "/signup",
 					success : function(data) {
 						console.log(data);
 					},

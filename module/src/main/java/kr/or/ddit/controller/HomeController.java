@@ -40,7 +40,7 @@ public class HomeController {
 	@Autowired
 	CaptureService captureService;
 	
-	public static String CAPTURE_PATH = "C:\\Users\\PC-18\\git\\jspSpringStudy\\module\\src\\main\\webapp\\resources\\upload\\";
+	public static String CAPTURE_PATH = "C:\\Users\\Anhy\\git\\jspSpringStudy\\module\\src\\main\\webapp\\resources\\upload\\";
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model) {
@@ -56,16 +56,18 @@ public class HomeController {
 	}
 	
 	
-	@RequestMapping(value = "/capture",method = RequestMethod.GET)
+	@RequestMapping(value = "/signup",method = RequestMethod.GET)
 	public String capture() {
-		return "capture";
+		return "signup";
 	}
 	
 	
 	@ResponseBody
-	@RequestMapping(value = "/capture",method = RequestMethod.POST)
+	@RequestMapping(value = "/signup",method = RequestMethod.POST)
 	public String capture(@RequestParam HashMap<Object, Object> param, final HttpServletRequest request,
-			final HttpServletResponse response) throws Exception {
+			final HttpServletResponse response, String name) throws Exception {
+		
+		log.info("name : " + name);
 		
 		String binaryData = request.getParameter("img");
 		FileOutputStream stream = null;
