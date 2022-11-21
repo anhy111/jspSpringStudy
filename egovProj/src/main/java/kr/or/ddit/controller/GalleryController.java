@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.input.InfiniteCircularInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,6 +80,7 @@ public class GalleryController {
 		방식 : get
 	 */
 	
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MEMBER')")
 	@GetMapping("/regist")
 	public String regist(Model model, HttpServletRequest req) {
 		

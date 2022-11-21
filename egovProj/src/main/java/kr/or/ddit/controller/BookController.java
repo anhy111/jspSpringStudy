@@ -10,6 +10,7 @@ import java.util.Map;
 import org.aspectj.apache.bcel.generic.NEW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -91,6 +92,7 @@ public class BookController {
 		return "book/insert";
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")	
 	@PostMapping("/insert")
 	public String writePost(BookVO bookVO) {
 		

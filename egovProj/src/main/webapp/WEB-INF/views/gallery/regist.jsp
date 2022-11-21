@@ -83,25 +83,35 @@
 			timer: 3000
 		});
 		  
-
 		
 		CKEDITOR.replace("content");
 		let $keyword = $("#keyword");
 		let $search = $("#search");
-
+		
+		
 		$search.on("click", function() {
 			let keyword = $keyword.val();
 			
 			let data = {
 				"title" : keyword
 			};
-
+			
+			// 스프링 시큐리티를 위한 토큰 처리(csrf) -> 볼토엔 큰 코스로 픽스!
+			let header = "${_csrf.headerName}";
+			let token = "${_csrf.token}";
+			
+			console.log("Header : " + header + ", token : " + token);
+			
+			
 			$.ajax({
 				url : "/book/searchBook",
 				type : "post",
 				contentType : "application/json;charset=utf-8",
 				data : JSON.stringify(data),
 				datatype : "json",
+				beforeSend:function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
 				success : function(result) {
 					$(".list-group").html("");
 					rsltSearch = result;
@@ -158,6 +168,8 @@
 			
 			let bookId = $("#bookId").val()
 			formData.append("bookId", bookId);
+
+
 			
 			$.ajax({
 				url:"/gallery/uploadAjaxAction",
