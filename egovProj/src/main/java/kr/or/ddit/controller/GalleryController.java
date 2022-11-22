@@ -15,6 +15,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.input.InfiniteCircularInputStream;
+import org.apache.tiles.request.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,8 +41,6 @@ import oracle.net.aso.a;
 @Controller
 public class GalleryController {
 
-	private static String uploadFolder = 
-			"C:\\eGovFrameDev-3.10.0-64bit\\workspace\\jspSpringStudy\\egovProj\\src\\main\\webapp\\resources\\upload";
 	
 	@Autowired
 	GalleryService galleryService;
@@ -94,10 +93,13 @@ public class GalleryController {
 	@ResponseBody
 	@PostMapping("/uploadAjaxAction")
 	public Map<String, String> uploadAjaxAction(MultipartFile[] uploadFile,
-							BookVO bookVO){
+							BookVO bookVO, HttpServletRequest request){
 		
 		log.info("파일 업로드를 수행합니다.");
 		List<AttachVO> attachVOList = new ArrayList<AttachVO>();
+		
+		String uploadFolder = 
+				request.getRealPath("\\resources\\upload");
 		
 		File uploadPath = new File(uploadFolder,getFolder());
 		
@@ -177,7 +179,8 @@ public class GalleryController {
 		log.info("uploadFile : " + uploadFile);
 		log.info("attachVO : " + attachVO);
 		
-		
+		String uploadFolder = 
+				request.getRealPath("\\resources\\upload");
 		
 		File uploadPath = new File(uploadFolder,getFolder());
 		log.info("upload Path : " + uploadPath);

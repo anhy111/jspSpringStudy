@@ -71,9 +71,11 @@ public class BookController {
 	public String updatePost(BookVO bookVO) {
 		log.info("bookbVO : " + bookVO);
 		
+		int bookId = bookVO.getBookId();
+		
 		bookService.update(bookVO);
 		
-		return "redirect:/book/detail?bookId="+bookVO.getBookId();			
+		return "redirect:/book/detail?bookId="+bookId;			
 		
 	}
 	
@@ -106,7 +108,7 @@ public class BookController {
 	public String getBookId() {
 		int bookId = bookService.getBookId();
 		
-		return ""+bookId;
+		return "" + bookId;
 	}
 	
 	@ResponseBody

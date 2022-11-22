@@ -29,6 +29,8 @@
 		
 	</select>
 	
+
+	
 	<!-- 
 		content 컬럼
 		CLOB 타입의 데이터를 MyBatis를 이용해 처리할 때는 resultMap 태그를 만들고 
@@ -66,12 +68,23 @@
 	</delete>
 	
 	<insert id="insert" parameterType="bookVO">
-		<selectKey order="BEFORE" keyProperty="bookId" resultType="int">
-			SELECT NVL(MAX(BOOK_ID),0)+1 FROM BOOK
+		<selectKey order="AFTER" keyProperty="bookId" resultType="int">
+			SELECT MAX(BOOK_ID) FROM BOOK
 		</selectKey>
-		
-		INSERT INTO BOOK(BOOK_ID, TITLE, CATEGORY, PRICE, CONTENT, INSERT_DATE)
-    		VALUES(#{bookId},#{title},#{category},#{price},#{content},SYSDATE)
+	
+		MERGE INTO BOOK B
+		USING DUAL ON(B.BOOK_ID = #{bookId}) 
+		WHEN MATCHED THEN
+		    UPDATE SET 
+				TITLE = #{title}
+			  , CATEGORY=#{category}
+			  , PRICE = #{price}
+			  , CONTENT = #{content}
+			  , INSERT_DATE = SYSDATE
+		WHEN NOT MATCHED THEN
+		    INSERT (BOOK_ID,TITLE, CATEGORY, PRICE, INSERT_DATE, CONTENT)
+		    VALUES((SELECT NVL(MAX(BOOK_ID),0) + 1 FROM BOOK)
+		    		,#{title},#{category},#{price},SYSDATE,#{content})
 	</insert>
 	
 	<select id="getBookId" resultType="int">

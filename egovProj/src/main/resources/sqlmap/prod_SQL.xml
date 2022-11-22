@@ -4,7 +4,7 @@
 <mapper namespace="kr.or.ddit.mapper.ProdMapper">
 
 	<select id="amtSale" resultType="hashMap">
-		SELECT P.PROD_NAME
+		SELECT P.PROD_NAME PRODNAME
 		     , SUM(P.PROD_SALE * C.CART_QTY) MONEY
 		FROM PROD P INNER JOIN CART C ON(C.CART_PROD = P.PROD_ID)
 		GROUP BY P.PROD_NAME

@@ -34,7 +34,8 @@
 								data-title="sample 1 - white" data-target="#modal-default"
 								data-id="/resources/upload${attachVO.filename}"
 								data-userno="${bookVO.bookId}" data-seq="${attachVO.seq}"
-								data-title2="${bookVO.title}" data-regDate="${attachVO.regdate}">
+								data-title2="${bookVO.title}" data-regDate="${attachVO.regdate}"
+								data-filename="${attachVO.filename}">
 								<img src="/resources/upload${attachVO.filename}?v=1"
 								class="img-fluid mb-2" alt="white sample" />
 							</a>
@@ -51,7 +52,9 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title">Default Modal</h4>
-				<input type="text" id="txtUserNo" /> <input type="text" id="txtSeq" />
+				<input type="hidden" id="txtUserNo" />
+				<input type="hidden" id="txtSeq" />
+				<input type="text" id="txtFilename" value="" />
 				<button type="button" class="close" data-dismiss="modal"
 					aria-label="Close">
 					<span aria-hidden="true">×</span>
@@ -68,6 +71,9 @@
 				<div class="text-right">
 					<!-- 일반 모드 -->
 					<span id="spn1" class="text-right">
+						<a id="down" class="btn btn-app" onclick="fn_download('')">
+							<i class="fas fa-save"></i> Save
+						</a>
 						<button id="edit" type="button" class="btn btn-primary">수정</button>
 						<button id="delete" type="button" class="btn btn-danger">삭제</button>
 					</span>
@@ -90,10 +96,9 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
-
 </div>
+<iframe id="ifrm" name="ifrm" style="display: none;"></iframe>
 <script type="text/javascript">
 	var $spn1;
 	var $spn2;
@@ -113,6 +118,10 @@
 					let regdate = $(this).data("regdate");
 					let userNo = $(this).data("userno");
 					let seq = $(this).data("seq");
+					let filename = $(this).data("filename");
+					
+					// 세션 스토리지 활용
+					sessionStorage.setItem("filename",filename);
 
 					console.log("data : " + data + ", title : " + title
 							+ ", userNo : " + userNo + ", seq : " + seq);
@@ -127,16 +136,23 @@
 					$spn2.css("display", "none");
 					$("#txtUserNo").val(userNo);
 					$("#txtSeq").val(seq);
+					$("#txtFilename").val(filename);
 
 				});
 
 		let currentBookId = "${param.bookId}"
 		let sel = "";
 
+		let header = "${_csrf.headerName}";
+		let token = "${_csrf.token}";
+		
 		$.ajax({
 			url : "/book/listAjax",
 			type : "get",
-			datatype : "json",
+			datatype : "json",				
+			beforeSend:function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
 			success : function(data) {
 				let $select = $(".custom-select");
 
@@ -212,6 +228,9 @@
 
 			formData.append("userNo", $("#txtUserNo").val());
 			formData.append("seq", $("#txtSeq").val());
+			
+			let header = "${_csrf.headerName}";
+			let token = "${_csrf.token}";
 
 			$.ajax({
 				url : "/gallery/updatePost",
@@ -221,6 +240,9 @@
 				data : formData,
 				dataType : "json",
 				type : "post",
+				beforeSend:function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
 				success : function(result) {
 					console.log("result : " + JSON.stringify(result));
 					
@@ -283,12 +305,18 @@
 
 			console.log("data : " + JSON.stringify(data));
 
+			let header = "${_csrf.headerName}";
+			let token = "${_csrf.token}";
+
 			$.ajax({
 				url : "/gallery/deletePost",
 				contentType : "application/json;charset=utf-8",
 				data : JSON.stringify(data),
 				dataType : "json",
 				type : "post",
+				beforeSend:function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
 				success : function(result) {
 					if (result.result) {
 						location.href = "/gallery/list?bookId=${param.bookId}";
@@ -298,5 +326,18 @@
 				}
 			});// end ajax
 		});//end delete
+		
 	});
+</script>
+<script type="text/javascript">
+	// 파일 다운로드
+	function fn_download(){
+		let filename = sessionStorage.getItem("filename");
+		
+		console.log("filename : " + filename);
+		
+		let vIfrm = document.getElementById("ifrm");
+		console.log(vIfrm);
+		vIfrm.src = "/download?fileName=" + filename;
+	}
 </script>

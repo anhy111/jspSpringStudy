@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,15 +26,6 @@
 		
 		$price.on("keyup",function(){
 			$(this).val( $(this).val().replace(/[^0-9]/g,"") );
-		})
-	
-		$.ajax({
-			url:"/book/getBookId",
-			contentType:'application/x-www-form-urlencoded',
-			type:"get",
-			success:function(data){
-				$("input[name='bookId']").val(data);
-			}
 		});
 		
 		CKEDITOR.replace( "content" );
@@ -53,13 +46,8 @@
 							<div class="card-body p-0">
 								<div class="bs-stepper linear">
 									<div class="bs-stepper-content">
-
 										<div id="logins-part" class="content active dstepper-block"
 											role="tabpanel" aria-labelledby="logins-part-trigger">
-											<div class="form-group mt-2">
-												<label for="exampleInputEmail1">BookId</label>
-												<input type="text" class="form-control" name="bookId" />
-											</div>
 											<div class="form-group">
 												<label for="exampleInputEmail1">Title</label>
 												<input type="text" class="form-control" name="title" />
@@ -86,6 +74,7 @@
 									href="/book/list" class="btn btn-primary">목록</a>
 							</div>
 						</div>
+						<sec:csrfInput/>
 					</form>
 
 				</div>

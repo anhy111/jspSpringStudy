@@ -12,6 +12,7 @@ $(function(){
 	
 	google.setOnLoadCallback(drawChart);
 	google.setOnLoadCallback(drawChart2);
+	google.setOnLoadCallback(drawChart3);
 	
 	function drawChart(){
 		// responseText : json 데이터를 텍스트로 읽어들임.
@@ -27,7 +28,7 @@ $(function(){
 		let data = new google.visualization.DataTable(jsonData);
 		
 		// 차트를 출력할 div 선택
-		let chart = new google.visualization.ColumnChart(document.getElementById("chart_div"));
+		let chart = new google.visualization.PieChart(document.getElementById("chart_div"));
 		//차트객체.draw(데이터테이블(data),옵션)
 		chart.draw(data,{
 			title:"이초딩 과일가게",
@@ -59,7 +60,32 @@ $(function(){
 			height:450,
 		});
 	}
+	
+	function drawChart3(){
+		// responseText : json 데이터를 텍스트로 읽어들임.
+		let jsonData = $.ajax({
+			url:"/chart/chart02",
+			dataType:"json",
+			async:false
+		}).responseText;
+	
+		console.log("jsonData : " + jsonData);
+		
+		// 데이터 테이블 생성
+		let data = new google.visualization.DataTable(jsonData);
+		
+		// 차트를 출력할 div 선택
+		let chart = new google.visualization.ColumnChart(document.getElementById("chart_div3"));
+		//차트객체.draw(데이터테이블(data),옵션)
+		chart.draw(data,{
+			title:"상품별 매출금액 합계",
+			curveType:"function",
+			width:600,
+			height:450,
+		});
+	}
 });
 </script>
 <div id="chart_div"></div>
 <div id="chart_div2"></div>
+<div id="chart_div3"></div>

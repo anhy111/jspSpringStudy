@@ -169,7 +169,8 @@
 			let bookId = $("#bookId").val()
 			formData.append("bookId", bookId);
 
-
+			let header = "${_csrf.headerName}";
+			let token = "${_csrf.token}";
 			
 			$.ajax({
 				url:"/gallery/uploadAjaxAction",
@@ -178,6 +179,9 @@
 				data:formData,
 				dataType:"json",
 				type:"post",
+				beforeSend:function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
 				success:function(data){
 					let result = data.result;
 					console.log("result : " + result);
